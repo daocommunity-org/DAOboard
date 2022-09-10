@@ -22,14 +22,15 @@ contract Storage {
     mapping(address => bool) isRegistered;
     address[] registeredAddresses;
 
-    uint256 length ;
+    uint256 length;
+
     constructor() {
         isAdmin[msg.sender] = true;
-        length=0;
+        length = 0;
     }
 
     function returnData() public view returns (Member[] memory) {
-    //    Member[] calldata datas = members;
+        //    Member[] calldata datas = members;
         return members;
     }
 
@@ -38,12 +39,12 @@ contract Storage {
     }
 
     function makeAdmin(address walletAddress) public payable {
-        require(isAdmin[msg.sender],"Non admin  access denied");
+        require(isAdmin[msg.sender], "Non admin  access denied");
         isAdmin[walletAddress] = true;
     }
 
     function revokeAdmin(address walletAddress) public payable {
-        require(isAdmin[msg.sender],"Non admin access revoked");
+        require(isAdmin[msg.sender], "Non admin access revoked");
         isAdmin[walletAddress] = false;
     }
 
@@ -51,18 +52,18 @@ contract Storage {
         return isRegistered[msg.sender];
     }
 
-    function editRegNo(string memory newRegNo) public payable{
+    function editRegNo(string memory newRegNo) public payable {
         members[Id[msg.sender]].regNo = newRegNo;
     }
 
     function addMember(string memory name, string memory regNo) public payable {
         require(!isRegistered[msg.sender], "User already registered");
         isRegistered[msg.sender] = true;
-        Id[msg.sender]=length;
-        length+=1;
+        Id[msg.sender] = length;
+        length += 1;
         registeredAddresses.push(msg.sender);
-        members.push(Member(name,regNo,0,true,false));
-    
+        members.push(Member(name, regNo, 0, true, false));
+
         regNoOf[msg.sender] = regNo;
     }
 
@@ -70,7 +71,6 @@ contract Storage {
         require(isAdmin[msg.sender], "Non-admin access denied");
         members[Id[walletAddress]].activated = false;
     }
-    
 
     function setCoordinator(address walletAddress) public payable {
         require(isAdmin[msg.sender], "Non admin access denied");
@@ -87,7 +87,7 @@ contract Storage {
         require(isRegistered[walletAddress], "Registered users only");
         members[Id[walletAddress]].activated = false;
         isRegistered[walletAddress] = false;
-        
+
         regNoOf[walletAddress] = "";
     }
 
