@@ -45,7 +45,6 @@ export const AppProvider = ({ children }) => {
     await signedContract.editRegNo(newregno);
   }
 
-
   const terminateUser = async (address) => {
     await signedContract.terminateUser(address);
   }
