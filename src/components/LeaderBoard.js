@@ -4,8 +4,9 @@ import { AppConfig } from '../context/AppConfig';
 function LeaderBoard() {
     const { membersdata } = useContext(AppConfig);
     return (
-        <div className='bg-sky-900 h-screen flex flex-col items-center'>
-            <table className=' m-auto w-[80%] overflow-scroll'>
+        <div className='bg-sky-900 h-screen flex flex-col items-center justify-center'>
+            <div><h1 className='font-bold text-blue-50 text-2xl mb-4'>LeaderBoard - Top Contributors</h1></div>
+            <table className='w-[80%] overflow-scroll'>
                 <tr className='border-2 border-black'>
                     <th className='border-black text-center border-2'>Name</th>
                     <th className='border-black text-center border-2'>Registration Number</th>
@@ -14,7 +15,7 @@ function LeaderBoard() {
                     <th className='border-black text-center border-2'>Coordinator</th>
                 </tr>
                 {membersdata.map((dat) => (
-                    <tr className='border-2 border-black'>
+                    dat[3] && <tr className='border-2 border-black'>
                         <td className='border-2 border-black font-mono text-center'>{dat[0]}</td>
                         <td className='border-2 border-black font-mono text-center'>{dat[1]}</td>
                         <td className='border-2 border-black font-mono text-center'>{dat[5]}</td>

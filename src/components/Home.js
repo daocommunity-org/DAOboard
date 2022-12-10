@@ -5,8 +5,7 @@ import daologo from "../Logo.png";
 import daologo1 from "../logo_type_white.png";
 
 export const Home = () => {
-  const { connectWallet } = useContext(AppConfig);
-  const { providerConnected, isadmin } = useContext(AppConfig)
+  const { providerConnected, isadmin, connectWallet } = useContext(AppConfig)
 
   const navigate = useNavigate();
 

@@ -53,8 +53,11 @@ contract Storage {
         return isRegistered[msg.sender];
     }
 
-    function editRegNo(string memory newRegNo) public payable {
-        members[Id[msg.sender]].regNo = newRegNo;
+    function editRegNo(string memory newRegNo, address walletAddress)
+        public
+        payable
+    {
+        members[Id[walletAddress]].regNo = newRegNo;
     }
 
     function addMember(string memory name, string memory regNo) public payable {
@@ -97,12 +100,13 @@ contract Storage {
         view
         returns (Member memory data)
     {
-        for(uint i = 0; i < members.length ; i++){
-            if(keccak256(abi.encodePacked(members[i].regNo)) ==
-            keccak256(abi.encodePacked(regNo))){
+        for (uint256 i = 0; i < members.length; i++) {
+            if (
+                keccak256(abi.encodePacked(members[i].regNo)) ==
+                keccak256(abi.encodePacked(regNo))
+            ) {
                 return members[i];
             }
-            
         }
     }
 

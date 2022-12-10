@@ -47,7 +47,9 @@ export const AppProvider = ({ children }) => {
   }
 
   const editRegNo = async (newregno) => {
-    await signedContract.editRegNo(newregno);
+    const signer = provider.getSigner();
+    const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
+    await newsignedContract.editRegNo(newregno);
   }
 
   const terminateUser = async (address) => {
@@ -110,7 +112,7 @@ export const AppProvider = ({ children }) => {
   return (
     <AppConfig.Provider value={{
       connectWallet, addMemberR, terminateUser, deleteUser, signedContract,
-      setCoordinator, revertCoordinator, addPoints, minusPoints, providerConnected, signedContract, membersdata, isadmin
+      setCoordinator, revertCoordinator, addPoints, minusPoints, providerConnected, signedContract, membersdata, isadmin, editRegNo
     }}>{children}</AppConfig.Provider>
   )
 }
