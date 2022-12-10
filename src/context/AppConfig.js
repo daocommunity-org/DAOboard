@@ -38,7 +38,10 @@ export const AppProvider = ({ children }) => {
     // setisAdmin(await newsignedContract.AdminStatus())
   }
   const addMemberR = async (name, regNo) => {
-    await signedContract.addMember(name, regNo);
+    const signer = provider.getSigner();
+    const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
+    await newsignedContract.addMember(name, regNo);
+
   }
 
   const editRegNo = async (newregno) => {
