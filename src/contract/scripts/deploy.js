@@ -1,5 +1,5 @@
 const hre = require("hardhat");
-
+const { verify } = require("./verify");
 async function main() {
   // We get the contract to deploy
   const Cave = await hre.ethers.getContractFactory("Storage");
@@ -9,6 +9,12 @@ async function main() {
 
   await caveContract.deployed();
   console.log("Cave deployed to:", caveContract.address);
+  //console.log(process.env.ETHERSCAN_API_KEY);
+
+  
+    console.log("verifying...");
+    await verify(caveContract.address);
+  
 }
 
 main()
