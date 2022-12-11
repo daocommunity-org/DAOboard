@@ -1,7 +1,7 @@
 import React, { useState, createContext, useEffect } from 'react'
 import { SortArray } from './Utils';
 import { ethers } from "ethers";
-import contr from '../../src/contract/artifacts/contracts/Lock.sol/Storage.json'
+import contr from '../../src/contract/src/artifacts/contracts/Lock.sol/Storage.json'
 export const AppConfig = createContext();
 
 export const AppProvider = ({ children }) => {
@@ -13,10 +13,13 @@ export const AppProvider = ({ children }) => {
   const [userDetails, setuserdetails] = useState([])
   const [fetchedUserDetails, setFetchedUserDetails] = useState([]);
   const [isRegistered, setisregistered] = useState(false);
+
+
+
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   // const [signedContract, setsignedContract] = useState()
 
-  const contractAddress = '0x1C03582d8f6afE30B5B7054d7bd126e4288Edffd'
+  const contractAddress = '0xCc020E9722816Ea317E78A53a9AC95c144c2cCCb'
   const ABI = contr.abi;
   const providerContract = new ethers.Contract(contractAddress, ABI, provider)
   let signedContract;
@@ -33,23 +36,24 @@ export const AppProvider = ({ children }) => {
     // setsignedContract(newsignedContract);
     signedContract = newsignedContract;
     console.log("connected")
-    console.log(newsignedContract)
+    // console.log(newsignedContract)
     await adminStatus();
     // setisAdmin(await newsignedContract.AdminStatus())
   }
   const addMemberR = async (name, regNo) => {
-    const signer = provider.getSigner();
-    const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
-    await newsignedContract.addMember(name, regNo);
-
+    await signedContract.addMember(name, regNo);
   }
 
   const editRegNo = async (newregno) => {
-    await signedContract.editRegNo(newregno);
+    const signer = provider.getSigner();
+    const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
+    await newsignedContract.editRegNo(newregno);
   }
 
   const terminateUser = async (address) => {
-    await signedContract.terminateUser(address);
+    const signer = provider.getSigner();
+    const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
+    await newsignedContract.terminateUser(address);
   }
   const deleteUser = async (walletAddress) => {
     await signedContract.deleteUser(walletAddress);
@@ -62,17 +66,25 @@ export const AppProvider = ({ children }) => {
     await signedContract.revertCoordinator(walletAddress);
   }
 
-  const getMemberDetails = async (walletAddress) => {
-    let tmp = await signedContract.getMemberDetails(walletAddress);
-    setFetchedUserDetails(tmp);
-  }
+  // const getMemberDetails = async (walletAddress) => {
+  //   let tmp = await signedContract.getMemberDetails(walletAddress);
+  //   setFetchedUserDetails(tmp);
+  // }
   const addPoints = async (walletAddress, addVal) => {
-    await signedContract.addPoints(walletAddress, addVal);
-
+    const signer = provider.getSigner();
+    const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
+    await newsignedContract.addPoints(walletAddress, addVal);
   }
   const minusPoints = async (walletAddress, addVal) => {
-    await signedContract.minusPoints(walletAddress, addVal);
+    const signer = provider.getSigner();
+    const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
+    await newsignedContract.minusPoints(walletAddress, addVal);
+  }
 
+  const makeAdmin = async (walletAddress) => {
+    const signer = provider.getSigner();
+    const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
+    await newsignedContract.makeAdmin(walletAddress);
   }
 
   const adminStatus = async () => {
@@ -80,6 +92,9 @@ export const AppProvider = ({ children }) => {
   }
 
   useEffect(() => {
+    const addMemberR = async (name, regNo) => {
+      await signedContract.addMember(name, regNo);
+    }
     const getData = async () => {
       let data = await providerContract.returnData();
       setmembersdata(SortArray(data));
@@ -94,8 +109,8 @@ export const AppProvider = ({ children }) => {
 
   return (
     <AppConfig.Provider value={{
-      connectWallet, addMemberR, terminateUser, deleteUser,
-      setCoordinator, revertCoordinator, getMemberDetails, addPoints, minusPoints, providerConnected, signedContract, membersdata, isadmin
+      connectWallet, addMemberR, terminateUser, deleteUser, signedContract,
+      setCoordinator, revertCoordinator, addPoints, minusPoints, providerConnected, signedContract, membersdata, isadmin, editRegNo
     }}>{children}</AppConfig.Provider>
   )
 }

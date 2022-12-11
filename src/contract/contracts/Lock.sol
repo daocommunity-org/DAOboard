@@ -14,6 +14,7 @@ contract Storage {
         uint256 point;
         bool activated;
         bool coordinator;
+        address walletAddress;
     }
     mapping(address => string) regNoOf;
     Member[] members;
@@ -52,8 +53,11 @@ contract Storage {
         return isRegistered[msg.sender];
     }
 
-    function editRegNo(string memory newRegNo) public payable {
-        members[Id[msg.sender]].regNo = newRegNo;
+    function editRegNo(string memory newRegNo, address walletAddress)
+        public
+        payable
+    {
+        members[Id[walletAddress]].regNo = newRegNo;
     }
 
     function addMember(string memory name, string memory regNo) public payable {
@@ -62,7 +66,7 @@ contract Storage {
         Id[msg.sender] = length;
         length += 1;
         registeredAddresses.push(msg.sender);
-        members.push(Member(name, regNo, 0, true, false));
+        members.push(Member(name, regNo, 0, true, false, msg.sender));
 
         regNoOf[msg.sender] = regNo;
     }
@@ -91,12 +95,19 @@ contract Storage {
         regNoOf[walletAddress] = "";
     }
 
-    function getMemberDetails(address walletAddress)
+    function getMemberDetails(string memory regNo)
         public
         view
         returns (Member memory data)
     {
-        return members[Id[walletAddress]];
+        for (uint256 i = 0; i < members.length; i++) {
+            if (
+                keccak256(abi.encodePacked(members[i].regNo)) ==
+                keccak256(abi.encodePacked(regNo))
+            ) {
+                return members[i];
+            }
+        }
     }
 
     function addPoints(address walletAddress, uint256 addVal) public payable {
