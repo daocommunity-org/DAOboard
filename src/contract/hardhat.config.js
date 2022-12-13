@@ -1,5 +1,4 @@
 require("@nomicfoundation/hardhat-toolbox");
-
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.9",
@@ -18,6 +17,21 @@ module.exports = {
       url: "https://rpc.testnet.fantom.network",
       //accounts: [""],
       chainId: 4002,
+    },
+    mumbai: {
+      url: "https://rpc-mumbai.maticvigil.com",
+      accounts: [
+        "",
+      ],
+      blockConfirmations: 6,
+    },
+  },
+  etherscan: {
+    apiKey: "",
+  },
+  namedAccounts: {
+    deployer: {
+      default: 0,
     },
   },
 };

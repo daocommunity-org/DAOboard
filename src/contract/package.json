@@ -18,6 +18,7 @@
     "typechain": "^8.1.1"
   },
   "dependencies": {
+    "dotenv": "^16.0.3",
     "solidity": "^0.0.1"
   }
 }
