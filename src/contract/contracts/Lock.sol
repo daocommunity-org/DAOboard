@@ -8,9 +8,9 @@ import "./proTokens.sol";
  * @dev Store & retrieve value in a variable
  * @custom:dev-run-script ./scripts/deploy_with_ethers.ts
  */
- 
-contract Storage is proToken{
-  address owner = msg.sender;
+
+contract Storage is proToken {
+  address Owner = msg.sender;
   struct Member {
     string name;
     string regNo;
@@ -122,8 +122,7 @@ contract Storage is proToken{
   }
 
   function convertPointsToToken(uint val) public payable {
-    
-    transferFrom(owner,msg.sender,val);
+    transferFrom(Owner, msg.sender, val);
     //uint256 allowance = token.allowance(0x5B38Da6a701c568545dCfcB03FcB875f56beddC4,msg.sender);
     require(isRegistered[msg.sender], "Not registered");
     require(members[Id[msg.sender]].point > 0, "Not enough Points");
@@ -131,8 +130,8 @@ contract Storage is proToken{
     members[Id[msg.sender]].point -= val;
   }
 
-  function approveTx(address member_approval,uint256 val) public onlyOwner {
-      require(isRegistered[member_approval], "Not registered");
-      approve(member_approval,val);
+  function approveTx(address member_approval, uint256 val) public onlyOwner {
+    require(isRegistered[member_approval], "Not registered");
+    approve(member_approval, val);
   }
 }
