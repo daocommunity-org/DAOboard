@@ -5,8 +5,7 @@ import daologo from "../Logo.png";
 import daologo1 from "../logo_type_white.png";
 
 export const Home = () => {
-  const { connectWallet } = useContext(AppConfig);
-  const { providerConnected, isadmin } = useContext(AppConfig)
+  const { providerConnected, isadmin, connectWallet } = useContext(AppConfig)
 
   const navigate = useNavigate();
 
@@ -50,7 +49,10 @@ export const Home = () => {
 
         <div className="button m-auto flex gap-10 -mt-10 flex-wrap">
           <div className="viewldboard">
-            <button className="w-fit px-6 py-4 bg-slate-500 rounded-xl active:bg-slate-400  hover:bg-sky-100 transition-all ease-in-out hover:scale-105">View Leaderboard</button>
+            <Link to="/leaderboard">
+              <button className="w-fit px-6 py-4 bg-slate-500 rounded-xl active:bg-slate-400  hover:bg-sky-100 transition-all ease-in-out hover:scale-105">View Leaderboard</button>
+            </Link>
+
           </div>
           <div className='registerldboard'>
             <Link to="/register">
