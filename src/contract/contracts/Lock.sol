@@ -8,8 +8,8 @@ import "./proTokens.sol";
  * @dev Store & retrieve value in a variable
  * @custom:dev-run-script ./scripts/deploy_with_ethers.ts
  */
- 
-contract LeaderBoard is proToken{
+
+contract LeaderBoard is proToken {
   address public Owner = msg.sender;
   struct Member {
     string name;
@@ -122,29 +122,30 @@ contract LeaderBoard is proToken{
     members[Id[walletAddress]].point -= minVal;
   }
 
-  function pointsToToken (uint256 val) public payable {
+  function pointsToToken(uint256 val) public payable {
     require(isRegistered[msg.sender], "Not registered");
     require(members[Id[msg.sender]].point > 0, "Not enough Points");
     require(val < members[Id[msg.sender]].point, "Not enough Points");
     flag = true;
-    transferFrom(Owner,msg.sender,val * 10**18);
+    transferFrom(Owner, msg.sender, val * 10 ** 18);
+    flag = false;
     members[Id[msg.sender]].point -= val;
   }
-  
 
-  function approveTx(address member_approval,uint256 val) public onlyOwner {
-      require(isRegistered[member_approval], "Not registered");
-      approve(member_approval,val * 10**18);
+  function approveTx(address member_approval, uint256 val) public onlyOwner {
+    require(isRegistered[member_approval], "Not registered");
+    approve(member_approval, val * 10 ** 18);
   }
+
   function transferFrom(
-        address from,
-        address to,
-        uint256 val
-    )  public virtual override returns (bool) {
-        require(flag == true,"Wrong Call");
-        address spender = _msgSender();
-        _spendAllowance(from, spender, val);
-        _transfer(from, to, val);
-        return true;
-    }
+    address from,
+    address to,
+    uint256 val
+  ) public virtual override returns (bool) {
+    require(flag == true, "Wrong Call");
+    address spender = _msgSender();
+    _spendAllowance(from, spender, val);
+    _transfer(from, to, val);
+    return true;
+  }
 }
