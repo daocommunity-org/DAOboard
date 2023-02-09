@@ -9,7 +9,7 @@ import "./proTokens.sol";
  * @custom:dev-run-script ./scripts/deploy_with_ethers.ts
  */
  
-contract Storage is proToken{
+contract LeaderBoard is proToken{
   address public Owner = msg.sender;
   struct Member {
     string name;
@@ -27,6 +27,7 @@ contract Storage is proToken{
   address[] registeredAddresses;
 
   uint256 length;
+  bool flag = false;
 
   constructor() {
     isAdmin[msg.sender] = true;
@@ -125,7 +126,9 @@ contract Storage is proToken{
     require(isRegistered[msg.sender], "Not registered");
     require(members[Id[msg.sender]].point > 0, "Not enough Points");
     require(val < members[Id[msg.sender]].point, "Not enough Points");
+    flag = true;
     transferFrom(Owner,msg.sender,val * 10**18);
+    members[Id[msg.sender]].point -= val;
   }
   
 
@@ -138,10 +141,7 @@ contract Storage is proToken{
         address to,
         uint256 val
     )  public virtual override returns (bool) {
-      require(isRegistered[msg.sender], "Not registered");
-    require(members[Id[msg.sender]].point > 0, "Not enough Points");
-    require(val < members[Id[msg.sender]].point, "Not enough Points");
-    members[Id[msg.sender]].point -= val;
+        require(flag == true,"Wrong Call");
         address spender = _msgSender();
         _spendAllowance(from, spender, val);
         _transfer(from, to, val);
