@@ -18,9 +18,10 @@ contract LeaderBoard is proToken {
     bool activated;
     bool coordinator;
     address walletAddress;
+    uint256 claimableTokens;
   }
   mapping(address => string) regNoOf;
-  Member[] members;
+  Member[] public members;
   mapping(address => uint256) Id;
   mapping(address => bool) isAdmin;
   mapping(address => bool) isRegistered;
@@ -115,6 +116,7 @@ contract LeaderBoard is proToken {
   function addPoints(address walletAddress, uint256 addVal) public payable {
     require(isAdmin[msg.sender], "Non-admin access denied");
     members[Id[walletAddress]].point += addVal;
+    members[Id[walletAddress]].claimableTokens +=addVal;  
   }
 
   function minusPoints(address walletAddress, uint256 minVal) public payable {
@@ -125,11 +127,11 @@ contract LeaderBoard is proToken {
   function pointsToToken(uint256 val) public payable {
     require(isRegistered[msg.sender], "Not registered");
     require(members[Id[msg.sender]].point > 0, "Not enough Points");
-    require(val < members[Id[msg.sender]].point, "Not enough Points");
+    require(val <= members[Id[msg.sender]].claimableTokens , "Not enough Points");
+    members[Id[msg.sender]].claimableTokens -= val;
     flag = true;
     transferFrom(Owner, msg.sender, val * 10 ** 18);
     flag = false;
-    members[Id[msg.sender]].point -= val;
   }
 
   function approveTx(address member_approval, uint256 val) public onlyOwner {
