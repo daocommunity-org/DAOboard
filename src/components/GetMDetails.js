@@ -35,7 +35,6 @@ function GetMDetails() {
                             <p className='text-white'>Role : {found[4] ? "Coordinator" : "Member"}</p>
                             <p className='text-white'>Status : {found[3] ? "Active" : "Deactivated"}</p>
                             <p className='text-white'>Points : {parseInt(found[2]._hex, 16)} </p>
-
                         </div>
 
                     }
