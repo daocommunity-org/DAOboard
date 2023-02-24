@@ -1,15 +1,24 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { AppConfig } from '../context/AppConfig'
 function Register() {
     const [name, setName] = useState("")
     const [regno, setRegno] = useState("")
     // console.log(name, regno)
     const { addMemberR, providerConnected } = useContext(AppConfig);
+    const navigate = useNavigate();
 
     const add = () => {
         addMemberR(name, regno);
-        console.log(providerConnected)
+        // console.log(providerConnected)
     }
+
+    useEffect(() => {
+        if (!providerConnected) {
+            navigate('/')
+            alert("Please connect your wallet to access the leaderboard")
+        }
+    }, [])
     return (
         <div className='bg-sky-900 h-screen flex items-center justify-center'>
             <div className="registrationBox flex gap-10 justify-center items-center flex-col border-2 border-white border-2 rounded-lg p-6">
