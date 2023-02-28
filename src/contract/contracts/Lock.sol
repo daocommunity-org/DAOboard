@@ -27,22 +27,27 @@ contract LeaderBoard is proToken {
         string taskName;
         uint256 pointsAlotted;
         bool status; // open or close
+        uint256 count;
     }
 
+    struct taskParticipant
+    {
+        address participants;
+    }
     Task[] taskArray;
     uint256 taskCount;
-
     
 
 
     mapping(address => string) regNoOf;
     Member[] public members;
+    //taskParticipant[] taskParticipantsArray;
     mapping(address => uint256) Id;
     mapping(address => bool) isAdmin;
     mapping(address => bool) isRegistered;
     address[] registeredAddresses;
     mapping(uint256 => mapping(address => bool)) taskDone;
-
+    mapping(uint256 => taskParticipant[]) public taskParticipants;
     uint256 length;
     bool flag = false;
 
@@ -177,7 +182,7 @@ contract LeaderBoard is proToken {
             isAdmin[msg.sender] == true,
             "Only admin can call this function"
         );
-        taskArray.push(Task(taskCount, taskName, points, true));
+        taskArray.push(Task(taskCount, taskName, points, true,0));
         taskCount++;
     }
 
@@ -203,15 +208,18 @@ contract LeaderBoard is proToken {
     {
       require(isRegistered[msg.sender]==true,"Not registered");
       require(taskArray[taskId].status == true,"Task invalid");
+      
       taskDone[taskId][msg.sender] = true;
+      taskParticipants[taskId].push(taskParticipant(msg.sender));
+      taskArray[taskId].count++;
     }
     function undoTaskCompleted(uint256 taskId)public
     {
       require(isRegistered[msg.sender]==true,"Not registered");
       require(taskArray[taskId].status == true,"Task invalid");
       taskDone[taskId][msg.sender] = false;
+      taskArray[taskId].count--;
     }
-
     function istaskCompleted(uint256 taskId,address walletAddress) public returns(bool)
     {
       require(isAdmin[msg.sender] == true,"Only admin can call this function");
@@ -231,9 +239,17 @@ contract LeaderBoard is proToken {
       taskDone[taskId][msg.sender] = false;
     }
 
-    function checkTaskCompletion(uint256 taskId) private view returns( mapping(address =>bool) storage)
-    {
-      require(isAdmin[msg.sender] == true,"Only admin can call this function");
-      return taskDone[taskId];
-    }
+    // function taskClick(uint256 taskId) public view returns(address[] memory)
+    // {
+    //     address[] memory _participants;
+    //     uint256 ct=taskArray[taskId].count;
+    //     uint256 i =0;
+    //     while(i<=ct)
+    //     {
+    //         _participants[i]=taskParticipants[taskId][i].participants;
+    //         i++;
+    //     }
+    //     return _participants;
+        
+    // }
 }
