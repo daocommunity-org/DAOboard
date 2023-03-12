@@ -19,7 +19,7 @@ contract LeaderBoard is proToken {
         bool coordinator;
         address walletAddress;
         uint256 claimableTokens;
-        
+        bool underTask;
     }
 
     struct Task {
@@ -29,11 +29,10 @@ contract LeaderBoard is proToken {
         bool status; // open or close
     }
 
-    Task[] taskArray;
-    uint256 taskCount;
-
-    
-
+    Task[] public taskArray;
+    uint256 public taskCount;
+    mapping(uint256 => address[]) public volunteers;
+    mapping(uint256 => mapping(address => bool)) public taskStatus;
 
     mapping(address => string) regNoOf;
     Member[] public members;
@@ -41,7 +40,6 @@ contract LeaderBoard is proToken {
     mapping(address => bool) isAdmin;
     mapping(address => bool) isRegistered;
     address[] registeredAddresses;
-    mapping(uint256 => mapping(address => bool)) taskDone;
 
     uint256 length;
     bool flag = false;
@@ -74,10 +72,10 @@ contract LeaderBoard is proToken {
         return isRegistered[msg.sender];
     }
 
-    function editRegNo(string memory newRegNo, address walletAddress)
-        public
-        payable
-    {
+    function editRegNo(
+        string memory newRegNo,
+        address walletAddress
+    ) public payable {
         members[Id[walletAddress]].regNo = newRegNo;
     }
 
@@ -87,7 +85,7 @@ contract LeaderBoard is proToken {
         Id[msg.sender] = length;
         length += 1;
         registeredAddresses.push(msg.sender);
-        members.push(Member(name, regNo, 0, true, false, msg.sender, 0));
+        members.push(Member(name, regNo, 0, true, false, msg.sender, 0, false));
 
         regNoOf[msg.sender] = regNo;
     }
@@ -116,11 +114,9 @@ contract LeaderBoard is proToken {
         regNoOf[walletAddress] = "";
     }
 
-    function getMemberDetails(string memory regNo)
-        public
-        view
-        returns (Member memory data)
-    {
+    function getMemberDetails(
+        string memory regNo
+    ) public view returns (Member memory data) {
         for (uint256 i = 0; i < members.length; i++) {
             if (
                 keccak256(abi.encodePacked(members[i].regNo)) ==
@@ -151,13 +147,13 @@ contract LeaderBoard is proToken {
         );
         members[Id[msg.sender]].claimableTokens -= val;
         flag = true;
-        transferFrom(Owner, msg.sender, val * 10**18);
+        transferFrom(Owner, msg.sender, val * 10 ** 18);
         flag = false;
     }
 
     function approveTx(address member_approval, uint256 val) public onlyOwner {
         require(isRegistered[member_approval], "Not registered");
-        approve(member_approval, val * 10**18);
+        approve(member_approval, val * 10 ** 18);
     }
 
     function transferFrom(
@@ -181,59 +177,99 @@ contract LeaderBoard is proToken {
         taskCount++;
     }
 
-    function deleteTask(uint256 taskId)public
-    {
-      require(isAdmin[msg.sender] == true,"Only admin can call this function");
-      delete taskArray[taskId];
+    function registerForTask(uint256 taskId) external {
+        require(
+            isRegistered[msg.sender] == true,
+            "Not a registered member, Please register yourself into the leaderboard"
+        );
+        volunteers[taskId].push(members[Id[msg.sender]].walletAddress);
+        members[Id[msg.sender]].underTask = true;
     }
 
-    function closeTask(uint256 taskId)public
-    {
-      require(isAdmin[msg.sender] == true,"Only admin can call this function");
-      require(taskArray[taskId].status == true,"its already closed");
-      taskArray[taskId].status = false;
-    }
-    function reopenTask(uint256 taskId) public
-    {
-      require(isAdmin[msg.sender] == true,"Only admin can call this function");
-      require(taskArray[taskId].status == false,"its already open");
-      taskArray[taskId].status = true;
-    }
-    function taskCompleted(uint256 taskId)public
-    {
-      require(isRegistered[msg.sender]==true,"Not registered");
-      require(taskArray[taskId].status == true,"Task invalid");
-      taskDone[taskId][msg.sender] = true;
-    }
-    function undoTaskCompleted(uint256 taskId)public
-    {
-      require(isRegistered[msg.sender]==true,"Not registered");
-      require(taskArray[taskId].status == true,"Task invalid");
-      taskDone[taskId][msg.sender] = false;
+    function completeTask(uint256 taskId) external {
+        require(
+            isRegistered[msg.sender] == true,
+            "Not a registered member, Please register yourself into the leaderboard"
+        );
+        require(
+            members[Id[msg.sender]].underTask = true,
+            "This member is not working under any task"
+        );
+        taskStatus[taskId][msg.sender] = true;
+        members[Id[msg.sender]].underTask = false;
     }
 
-    function istaskCompleted(uint256 taskId,address walletAddress) public returns(bool)
-    {
-      require(isAdmin[msg.sender] == true,"Only admin can call this function");
-      if(taskDone[taskId][walletAddress]=true)
-      {
-        return true;
-      }
-      else {
-        return false;
-      }
-    }
+    // function deleteTask(uint256 taskId) public {
+    //     require(
+    //         isAdmin[msg.sender] == true,
+    //         "Only admin can call this function"
+    //     );
+    //     delete taskArray[taskId];
+    // }
 
-    function taskAdmin(uint256 taskId,address walletAddress)public 
-    {
-      require(isAdmin[msg.sender] == true,"Only admin can call this function");
-      require(taskDone[taskId][walletAddress] == true);
-      taskDone[taskId][msg.sender] = false;
-    }
+    // function closeTask(uint256 taskId) public {
+    //     require(
+    //         isAdmin[msg.sender] == true,
+    //         "Only admin can call this function"
+    //     );
+    //     require(taskArray[taskId].status == true, "its already closed");
+    //     taskArray[taskId].status = false;
+    // }
 
-    function checkTaskCompletion(uint256 taskId) private view returns( mapping(address =>bool) storage)
-    {
-      require(isAdmin[msg.sender] == true,"Only admin can call this function");
-      return taskDone[taskId];
-    }
+    // function reopenTask(uint256 taskId) public {
+    //     require(
+    //         isAdmin[msg.sender] == true,
+    //         "Only admin can call this function"
+    //     );
+    //     require(taskArray[taskId].status == false, "its already open");
+    //     taskArray[taskId].status = true;
+    // }
+
+    // function taskCompleted(uint256 taskId) public {
+    //     require(isRegistered[msg.sender] == true, "Not registered");
+    //     require(taskArray[taskId].status == true, "Task invalid");
+    //     taskDone[taskId][msg.sender] = true;
+    // }
+
+    // function undoTaskCompleted(uint256 taskId) public {
+    //     require(isRegistered[msg.sender] == true, "Not registered");
+    //     require(taskArray[taskId].status == true, "Task invalid");
+    //     taskDone[taskId][msg.sender] = false;
+    // }
+
+    // function istaskCompleted(uint256 taskId, address walletAddress)
+    //     public
+    //     returns (bool)
+    // {
+    //     require(
+    //         isAdmin[msg.sender] == true,
+    //         "Only admin can call this function"
+    //     );
+    //     if (taskDone[taskId][walletAddress] = true) {
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // }
+
+    // function taskAdmin(uint256 taskId, address walletAddress) public {
+    //     require(
+    //         isAdmin[msg.sender] == true,
+    //         "Only admin can call this function"
+    //     );
+    //     require(taskDone[taskId][walletAddress] == true);
+    //     taskDone[taskId][msg.sender] = false;
+    // }
+
+    // function checkTaskCompletion(uint256 taskId)
+    //     public
+    //     view
+    //     returns (mapping(address => bool))
+    // {
+    //     require(
+    //         isAdmin[msg.sender] == true,
+    //         "Only admin can call this function"
+    //     );
+    //     return taskDone[taskId];
+    // }
 }
