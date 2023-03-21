@@ -41,7 +41,6 @@ contract LeaderBoard is proToken {
 
     mapping(address => string) regNoOf;
     Member[] public members;
-    //taskParticipant[] taskParticipantsArray;
     mapping(address => uint256) Id;
     mapping(address => bool) isAdmin;
     mapping(address => bool) isRegistered;
@@ -79,11 +78,12 @@ contract LeaderBoard is proToken {
         return isRegistered[msg.sender];
     }
 
-    function editRegNo(string memory newRegNo, address walletAddress)
+    function editRegNo(string memory newRegNo)
         public
         payable
     {
-        members[Id[walletAddress]].regNo = newRegNo;
+        require(isRegistered[msg.sender]==true,"Not registered");
+        members[Id[msg.sender]].regNo = newRegNo;
     }
 
     function addMember(string memory name, string memory regNo) public payable {
@@ -179,7 +179,7 @@ contract LeaderBoard is proToken {
 
     function addTask(string memory taskName, uint256 points) public {
         require(
-            isAdmin[msg.sender] == true,
+            isAdmin[msg.sender] == true || members[Id[msg.sender]].coordinator == true,
             "Only admin can call this function"
         );
         taskArray.push(Task(taskCount, taskName, points, true,0));
@@ -188,19 +188,19 @@ contract LeaderBoard is proToken {
 
     function deleteTask(uint256 taskId)public
     {
-      require(isAdmin[msg.sender] == true,"Only admin can call this function");
+      require(isAdmin[msg.sender] == true || members[Id[msg.sender]].coordinator == true,"Only admin can call this function");
       delete taskArray[taskId];
     }
 
     function closeTask(uint256 taskId)public
     {
-      require(isAdmin[msg.sender] == true,"Only admin can call this function");
+      require(isAdmin[msg.sender] == true || members[Id[msg.sender]].coordinator == true,"Only admin can call this function");
       require(taskArray[taskId].status == true,"its already closed");
       taskArray[taskId].status = false;
     }
     function reopenTask(uint256 taskId) public
     {
-      require(isAdmin[msg.sender] == true,"Only admin can call this function");
+      require(isAdmin[msg.sender] == true || members[Id[msg.sender]].coordinator == true,"Only admin can call this function");
       require(taskArray[taskId].status == false,"its already open");
       taskArray[taskId].status = true;
     }
@@ -220,10 +220,10 @@ contract LeaderBoard is proToken {
       taskDone[taskId][msg.sender] = false;
       taskArray[taskId].count--;
     }
-    function istaskCompleted(uint256 taskId,address walletAddress) public returns(bool)
+    function istaskCompleted(uint256 taskId,address walletAddress) public view returns(bool)
     {
-      require(isAdmin[msg.sender] == true,"Only admin can call this function");
-      if(taskDone[taskId][walletAddress]=true)
+      require(isAdmin[msg.sender] == true || members[Id[msg.sender]].coordinator == true,"Only admin can call this function");
+      if(taskDone[taskId][walletAddress]==true)
       {
         return true;
       }
@@ -236,20 +236,6 @@ contract LeaderBoard is proToken {
     {
       require(isAdmin[msg.sender] == true,"Only admin can call this function");
       require(taskDone[taskId][walletAddress] == true);
-      taskDone[taskId][msg.sender] = false;
+      taskDone[taskId][walletAddress] = false;
     }
-
-    // function taskClick(uint256 taskId) public view returns(address[] memory)
-    // {
-    //     address[] memory _participants;
-    //     uint256 ct=taskArray[taskId].count;
-    //     uint256 i =0;
-    //     while(i<=ct)
-    //     {
-    //         _participants[i]=taskParticipants[taskId][i].participants;
-    //         i++;
-    //     }
-    //     return _participants;
-        
-    // }
 }
