@@ -17,6 +17,7 @@ contract LeaderBoard is proToken {
         uint256 point;
         bool activated;
         bool coordinator;
+        string role;
         address walletAddress;
         uint256 claimableTokens;
         bool underTask;
@@ -25,16 +26,14 @@ contract LeaderBoard is proToken {
     struct Task {
         uint256 taskId;
         string taskName;
+        string taskDesc;
         uint256 pointsAlotted;
         bool status; // open or close
         uint256 count;
     }
 
-    struct taskParticipant {
-        address participants;
-    }
-    Task[] taskArray;
-    uint256 taskCount;
+    Task[] public taskArray;
+    uint256 public taskCount;
 
     mapping(address => string) regNoOf;
     Member[] public members;
@@ -42,19 +41,29 @@ contract LeaderBoard is proToken {
     mapping(address => bool) isAdmin;
     mapping(address => bool) isRegistered;
     address[] registeredAddresses;
-    mapping(uint256 => mapping(address => bool)) taskDone;
+    // taskId -> registeredAddresses[]
+    mapping(address => uint256) public taskRegistrations;
+    mapping(uint256 => mapping(address => bool)) public taskDone;
+    mapping(uint256 => mapping(address => bool)) public taskEligible;
+    mapping(uint256 => mapping(address => string)) public taskComments;
 
-    uint256 length;
+    uint256 public length;
     bool flag = false;
 
     constructor() {
         isAdmin[msg.sender] = true;
+        isAdmin[0xe6754Bd3A3bC25d2d3cC211af6E2422370503280] = true;
         length = 0;
     }
 
     function returnData() public view returns (Member[] memory) {
         //    Member[] calldata datas = members;
         return members;
+    }
+
+    function returnTasks() public view returns (Task[] memory) {
+        //    Member[] calldata datas = members;
+        return taskArray;
     }
 
     function AdminStatus() public view returns (bool stat) {
@@ -88,7 +97,9 @@ contract LeaderBoard is proToken {
         Id[msg.sender] = length;
         length += 1;
         registeredAddresses.push(msg.sender);
-        members.push(Member(name, regNo, 0, true, false, msg.sender, 0, false));
+        members.push(
+            Member(name, regNo, 0, true, false, "member", msg.sender, 0, false)
+        );
 
         regNoOf[msg.sender] = regNo;
     }
@@ -98,9 +109,13 @@ contract LeaderBoard is proToken {
         members[Id[walletAddress]].activated = false;
     }
 
-    function setCoordinator(address walletAddress) public payable {
+    function setCoordinator(
+        address walletAddress,
+        string memory department
+    ) public payable {
         require(isAdmin[msg.sender], "Non admin access denied");
         members[Id[walletAddress]].coordinator = true;
+        members[Id[walletAddress]].role = department;
     }
 
     function revertCoordinator(address walletAddress) public payable {
@@ -171,14 +186,26 @@ contract LeaderBoard is proToken {
         return true;
     }
 
-    function addTask(string memory taskName, uint256 points) public {
+    function addTask(
+        string memory taskName,
+        string memory taskDesc,
+        uint256 points
+    ) public {
         require(
             isAdmin[msg.sender] == true ||
                 members[Id[msg.sender]].coordinator == true,
             "Only admin can call this function"
         );
-        taskArray.push(Task(taskCount, taskName, points, true, 0));
+        taskArray.push(Task(taskCount, taskName, taskDesc, points, true, 0));
         taskCount++;
+    }
+
+    function registerForTask(uint256 taskId, string memory comments) external {
+        require(isRegistered[msg.sender], "Not registered member");
+        taskRegistrations[msg.sender] = taskId;
+        taskArray[taskId].count += 1;
+        taskEligible[taskId][msg.sender] = true;
+        taskComments[taskId][msg.sender] = comments;
     }
 
     function deleteTask(uint256 taskId) public {
@@ -208,12 +235,20 @@ contract LeaderBoard is proToken {
     }
 
     function taskCompleted(uint256 taskId) public {
-        require(isRegistered[msg.sender] == true, "Not registered");
+        require(
+            taskEligible[taskId][msg.sender],
+            "User not registered for task"
+        );
+        require(isRegistered[msg.sender] == true, "Not a registered member");
         require(taskArray[taskId].status == true, "Task invalid");
         taskDone[taskId][msg.sender] = true;
     }
 
     function undoTaskCompleted(uint256 taskId) public {
+        require(
+            taskEligible[taskId][msg.sender],
+            "User not registered for task"
+        );
         require(isRegistered[msg.sender] == true, "Not registered");
         require(taskArray[taskId].status == true, "Task invalid");
         taskDone[taskId][msg.sender] = false;
@@ -243,13 +278,13 @@ contract LeaderBoard is proToken {
         taskDone[taskId][msg.sender] = false;
     }
 
-    function checkTaskCompletion(
-        uint256 taskId
-    ) private view returns (mapping(address => bool) storage) {
-        require(
-            isAdmin[msg.sender] == true,
-            "Only admin can call this function"
-        );
-        return taskDone[taskId];
-    }
+    // function checkTaskCompletion(
+    //     uint256 taskId
+    // ) private view returns (mapping(address => bool) storage) {
+    //     require(
+    //         isAdmin[msg.sender] == true,
+    //         "Only admin can call this function"
+    //     );
+    //     return taskDone[taskId];
+    // }
 }

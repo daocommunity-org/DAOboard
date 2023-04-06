@@ -13,15 +13,15 @@ module.exports = {
       url: "https://ropsten.infura.io/v3/18357c43a5ec4ef8884cb156adcea32b",
       //accounts: [""]
     },
-    ftmtest: {
-      url: "https://rpc.testnet.fantom.network",
-      //accounts: [""],
-      chainId: 4002,
+    ftmoperatest: {
+      url: "https://rpcapi.fantom.network",
+      accounts: [""],
+      chainId: 250
+      ,
     },
     mumbai: {
-      url: "https://rpc-mumbai.maticvigil.com",
-      accounts: [""],
-      blockConfirmations: 6,
+      url: "https://matic-mumbai.chainstacklabs.com	",
+      accounts: [""],//
     },
   },
   etherscan: {
