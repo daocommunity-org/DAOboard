@@ -92,7 +92,7 @@ function LeaderBoard() {
                                     Points
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Coordinator
+                                    Role
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Claimable Tokens
@@ -113,19 +113,19 @@ function LeaderBoard() {
                                         {dat[1]}
                                     </td>
                                     <td class="px-6 py-4 text-black">
-                                        {dat[5]}
+                                        {dat[6]}
                                     </td>
                                     <td class="px-6 py-4 text-black">
                                         {parseInt(dat[2]._hex, 16)}
                                     </td>
                                     <td class="px-6 py-4 text-black">
-                                        {dat[4] ? "Coordinator" : "Not Coordinator"}
+                                        {dat[5]}
                                     </td>
                                     <td class="px-6 py-4 text-black">
-                                        {parseInt(dat[6]._hex, 16)}
+                                        {parseInt(dat[7]._hex, 16) ? parseInt(dat[7]._hex, 16) : ""}
                                     </td>
                                     <td>
-                                        {parseInt(dat[6]._hex, 16) !== 0 && dat[5].toLowerCase() === currentUser.toLowerCase() ? <button onClick={() => handleOpen(dat[0], parseInt(dat[6]._hex, 16))} className='w-fit h-fit p-2 bg-slate-500 rounded-xl  border-2 border-blue-200 active:bg-slate-400 transition-all ease-in-out hover:scale-105 hover:bg-blue-300 cursor-pointer'>Claim</button> : ""}
+                                        {parseInt(dat[7]._hex, 16) !== 0 && dat[6].toLowerCase() === currentUser.toLowerCase() ? <button onClick={() => handleOpen(dat[0], parseInt(dat[7]._hex, 16))} className='w-fit h-fit p-2 bg-slate-500 rounded-xl  border-2 border-blue-200 active:bg-slate-400 transition-all ease-in-out hover:scale-105 hover:bg-blue-300 cursor-pointer'>Claim</button> : ""}
                                     </td>
                                 </tr>
                             ))

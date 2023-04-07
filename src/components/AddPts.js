@@ -9,8 +9,8 @@ function AddPts() {
     const [points, setPoints] = useState("");
     const addpts = () => {
         for (let i = 0; i < membersdata.length; i++) {
-            if (membersdata[i][5] === wallet) {
-                addPoints(wallet, points);
+            if (membersdata[i][6] === wallet) {
+                addPoints(wallet, parseInt(points));
             }
         }
     }

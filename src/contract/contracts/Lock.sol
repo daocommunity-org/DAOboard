@@ -30,6 +30,7 @@ contract LeaderBoard is proToken {
         uint256 pointsAlotted;
         bool status; // open or close
         uint256 count;
+        address initiator;
     }
 
     Task[] public taskArray;
@@ -196,7 +197,9 @@ contract LeaderBoard is proToken {
                 members[Id[msg.sender]].coordinator == true,
             "Only admin can call this function"
         );
-        taskArray.push(Task(taskCount, taskName, taskDesc, points, true, 0));
+        taskArray.push(
+            Task(taskCount, taskName, taskDesc, points, true, 0, msg.sender)
+        );
         taskCount++;
     }
 

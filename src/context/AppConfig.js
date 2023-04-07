@@ -9,11 +9,12 @@ export const AppProvider = ({ children }) => {
   const [membersdata, setmembersdata] = useState([]);
   const [isadmin, setisAdmin] = useState(false);
   const [currentUser, setcurrentUser] = useState()
+  const [tasks, setTasks] = useState([])
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   // const [signedContract, setsignedContract] = useState()
 
-  const contractAddress = "0x3b5405Bb53440675B3CD8bf532229d5cE97a4B74";
+  const contractAddress = "0xb8E0dD60Fbf668b2b28909d6c33C68eccE1C1843";
   const ABI = contr.abi;
   const providerContract = new ethers.Contract(contractAddress, ABI, provider);
   let signedContract;
@@ -70,10 +71,12 @@ export const AppProvider = ({ children }) => {
     await signedContract.revertCoordinator(walletAddress);
   };
 
-  // const getMemberDetails = async (walletAddress) => {
-  //   let tmp = await signedContract.getMemberDetails(walletAddress);
-  //   setFetchedUserDetails(tmp);
-  // }
+  const addTask = async (taskName, taskDesc, points) => {
+    const signer = provider.getSigner();
+    const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
+    await newsignedContract.addTask(taskName, taskDesc, points)
+  }
+
   const addPoints = async (walletAddress, addVal) => {
     const signer = provider.getSigner();
     const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
@@ -101,18 +104,46 @@ export const AppProvider = ({ children }) => {
     setisAdmin(await signedContract.AdminStatus());
   };
 
+  const registerForTask = async (taskId, comment) => {
+    const signer = provider.getSigner();
+    const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
+    await newsignedContract.registerForTask(taskId, comment)
+  }
+
+  const getVolunteerList = async (taskId) => {
+    const signer = provider.getSigner();
+    const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
+    let volList = []
+    let k = 0
+    for (let i = 0; i < membersdata.length; i++) {
+      let temp = membersdata[i]
+      let address = temp.walletAddress
+      console.log(address)
+      let id = await newsignedContract.taskRegistrations(address)
+      if (parseInt(id._hex) === taskId) {
+        console.log("first")
+        volList[k] = [temp.name, temp.walletAddress]
+        k++
+      }
+    }
+    console.log(volList)
+    return volList
+  }
+
   useEffect(() => {
-    const addMemberR = async (name, regNo) => {
-      await signedContract.addMember(name, regNo);
-    };
     const getData = async () => {
       let data = await providerContract.returnData();
       setmembersdata(SortArray(data));
+
+      let tasks = await providerContract.returnTasks();
+      setTasks(tasks)
+
       // let stat = await providerContract.AdminStatus();
       // setisAdmin(stat);
       // stat = await providerContract.registerStatus();
       // setisregistered(stat);
       console.log("data is ", data);
+      console.log("tasks are ", tasks);
       console.log(currentUser)
     };
     getData();
@@ -137,7 +168,11 @@ export const AppProvider = ({ children }) => {
         editRegNo,
         approveTokens,
         currentUser,
-        pointsToToken
+        pointsToToken,
+        addTask,
+        tasks,
+        getVolunteerList,
+        registerForTask
       }}
     >
       {children}

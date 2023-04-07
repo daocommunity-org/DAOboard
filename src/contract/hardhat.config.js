@@ -1,7 +1,12 @@
 require("@nomicfoundation/hardhat-toolbox");
+require('dotenv').config()
+
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: "0.8.9",
+  solidity: {
+    version: "0.8.9",
+    settings: { optimizer: { enabled: true, runs: 200 } }
+  },
   paths: {
     artifacts: "./src/artifacts",
   },
@@ -13,15 +18,15 @@ module.exports = {
       url: "https://ropsten.infura.io/v3/18357c43a5ec4ef8884cb156adcea32b",
       //accounts: [""]
     },
-    ftmoperatest: {
-      url: "https://rpcapi.fantom.network",
-      accounts: [""],
-      chainId: 250
-      ,
+    ftmtest: {
+      url: "https://rpc.testnet.fantom.network",
+      //accounts: [""],
+      chainId: 4002,
     },
     mumbai: {
-      url: "https://matic-mumbai.chainstacklabs.com	",
-      accounts: [""],//
+      url: "https://rpc-mumbai.maticvigil.com",
+      accounts: [process.env.PRIVATE_KEY],
+      blockConfirmations: 6,
     },
   },
   etherscan: {

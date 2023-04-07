@@ -31,8 +31,8 @@ function GetMDetails() {
                     {foundStatus &&
                         <div className='flex flex-col text-center'>
                             <p className='text-white'>Name : {found[0]}</p>
-                            <p className='text-white'>Wallet Address : {found[5]}</p>
-                            <p className='text-white'>Role : {found[4] ? "Coordinator" : "Member"}</p>
+                            <p className='text-white'>Wallet Address : {found[6]}</p>
+                            <p className='text-white'>Role : {found[5]}</p>
                             <p className='text-white'>Status : {found[3] ? "Active" : "Deactivated"}</p>
                             <p className='text-white'>Points : {parseInt(found[2]._hex, 16)} </p>
                         </div>
