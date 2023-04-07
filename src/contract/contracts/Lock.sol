@@ -42,7 +42,7 @@ contract LeaderBoard is proToken {
     mapping(address => bool) isAdmin;
     mapping(address => bool) isRegistered;
     address[] registeredAddresses;
-    // taskId -> registeredAddresses[]
+
     mapping(address => uint256) public taskRegistrations;
     mapping(uint256 => mapping(address => bool)) public taskDone;
     mapping(uint256 => mapping(address => bool)) public taskEligible;
@@ -55,6 +55,27 @@ contract LeaderBoard is proToken {
         isAdmin[msg.sender] = true;
         isAdmin[0xe6754Bd3A3bC25d2d3cC211af6E2422370503280] = true;
         length = 0;
+    }
+
+    function returnTaskDone(
+        uint256 taskId,
+        address userAddress
+    ) external view returns (bool) {
+        return taskDone[taskId][userAddress];
+    }
+
+    function returnTaskEligible(
+        uint256 taskId,
+        address userAddress
+    ) external view returns (bool) {
+        return taskEligible[taskId][userAddress];
+    }
+
+    function returnTaskComments(
+        uint256 taskId,
+        address userAddress
+    ) external view returns (string memory) {
+        return taskComments[taskId][userAddress];
     }
 
     function returnData() public view returns (Member[] memory) {
@@ -278,7 +299,7 @@ contract LeaderBoard is proToken {
             "Only admin can call this function"
         );
         require(taskDone[taskId][walletAddress] == true);
-        taskDone[taskId][msg.sender] = false;
+        taskDone[taskId][walletAddress] = false;
     }
 
     // function checkTaskCompletion(

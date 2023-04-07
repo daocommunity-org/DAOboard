@@ -11,7 +11,7 @@ function TaskStatus() {
 
     return (
         <div className='flex flex-col gap-6 justify-center items-center w-[34rem]'>
-            <div className='taskstatus flex items-center flex-col gap-6 w-full'>
+            <div className='taskstatus flex items-center flex-col gap-6 w-full bg-blue-400'>
                 {taskArr.map((dat) => (
                     <p>{dat[1]}</p>
                 ))}
