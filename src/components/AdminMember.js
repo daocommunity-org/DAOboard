@@ -15,7 +15,6 @@ function AdminMember() {
             <AdminNav />
             <div className='border-2 border-blue-200 rounded-xl m-10 p-10 flex flex-col gap-8  w-3/4 h-[90%]'>
                 <div className='flex gap-8'>
-
                     <button className="w-fit h-fit p-2 bg-slate-500 rounded-xl  border-2 border-blue-200 active:bg-slate-400 transition-all ease-in-out hover:scale-105" onClick={() => setStatefunction("edit")}>Edit Register No</button>
                     <button className="w-fit h-fit p-2 bg-slate-500 rounded-xl  border-2 border-blue-200 active:bg-slate-400 transition-all ease-in-out hover:scale-105" onClick={() => setStatefunction("terminate")}>Terminate Member</button>
                     <button className="w-fit h-fit p-2 bg-slate-500 rounded-xl  border-2 border-blue-200 active:bg-slate-400 transition-all ease-in-out hover:scale-105" onClick={() => setStatefunction("addpoints")}>Add Points</button>

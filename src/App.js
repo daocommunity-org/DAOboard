@@ -9,6 +9,8 @@ import AdminMember from './components/AdminMember';
 import AdminCoord from './components/AdminCoord';
 import AdminMisc from './components/AdminMisc';
 import LeaderBoard from './components/LeaderBoard';
+import AdminTasks from './components/AdminTasks';
+import UserTask from './components/UserTask';
 
 function App() {
   return (
@@ -20,8 +22,10 @@ function App() {
           <Route path='/admin/member' element={<AdminMember />}></Route>
           <Route path='/admin/coordinator' element={<AdminCoord />}></Route>
           <Route path='/admin/misc' element={<AdminMisc />}></Route>
+          <Route path='/admin/tasks' element={<AdminTasks />}></Route>
           <Route path='/register' element={<div> <Register /></div>}></Route>
           <Route path='/leaderboard' element={<div> <LeaderBoard /></div>}></Route>
+          <Route path='/taskstatus/:address/:taskId' element={<div> <UserTask /></div>}></Route>
         </Routes>
       </AppProvider>
     </Router>

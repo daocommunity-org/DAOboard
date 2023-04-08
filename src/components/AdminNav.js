@@ -21,6 +21,9 @@ function AdminNav() {
             <Link to='/admin/misc' style={{ display: 'block' }}>
                 <button className="p-2 bg-slate-500 rounded-xl  border-2 border-blue-200 active:bg-slate-400 transition-all ease-in-out hover:scale-105">Misc Functions</button>
             </Link>
+            <Link to='/admin/tasks' style={{ display: 'block' }}>
+                <button className="p-2 bg-slate-500 rounded-xl  border-2 border-blue-200 active:bg-slate-400 transition-all ease-in-out hover:scale-105">Task Functions</button>
+            </Link>
 
         </div>
     )

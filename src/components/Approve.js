@@ -8,10 +8,14 @@ function Approve() {
 
     const approveTxn = async () => {
         if (isadmin) {
-            await approveTokens(wallet, parseInt(tokens))
-            alert(`${tokens} Tokens has approved for ${wallet}. Please wait for 30-40s before you claim your tokens`)
-        } else {
-            alert("Only the DEPLOYER can approve tokens")
+            try {
+                await approveTokens(wallet, parseInt(tokens))
+                alert(`${tokens} Tokens has approved for ${wallet}. Please wait for 30-40s before you claim your tokens`)
+            } catch (error) {
+                console.log(error)
+                alert("Only contract deployer can invoke this function")
+            }
+
         }
     }
 
