@@ -12,7 +12,7 @@ export const AppProvider = ({ children }) => {
   const [tasks, setTasks] = useState([])
   const [taskLoader, setTaskLoader] = useState(false)
 
-  const contractAddress = "0xc880f9c2a8CdD09F93C28ecb517142D89560824D";
+  const contractAddress = "0x3fFD4e061Fd69E47Fe1301935eB7a4a8f3abDE19";
   const ABI = contr.abi;
 
 
