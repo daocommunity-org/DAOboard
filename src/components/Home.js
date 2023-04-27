@@ -176,7 +176,7 @@ export const Home = () => {
           <div className='font-bold text-blue-50 text-2xl'>LEADERBOARD</div>
         </div>
 
-        <div className="button m-auto flex gap-10 -mt-10 flex-wrap">
+        <div className="button m-auto flex gap-10 flex-wrap">
           <div className="viewldboard">
             <Link to="/leaderboard">
               <button className="w-fit px-6 py-4 bg-slate-500 rounded-xl active:bg-slate-400  hover:bg-sky-100 transition-all ease-in-out hover:scale-105">View Leaderboard</button>
@@ -188,6 +188,9 @@ export const Home = () => {
               <button className="w-fit px-6 py-4 bg-slate-500 rounded-xl active:bg-slate-400  hover:bg-sky-100 transition-all ease-in-out hover:scale-105">Register for Leaderboard</button>
             </Link>
           </div>
+        </div>
+        <div className="faucet mb-56">
+          <p className='text-slate-300 font-semibold'>Mumbai Faucet - <a className='px-1 py-1.5 text-black bg-slate-400 rounded-xl active:bg-slate-300  hover:bg-sky-100 transition-all ease-in-out hover:scale-105' href="https://mumbaifaucet.com/" target='_blank'>CLICK HERE</a></p>
         </div>
       </div>
 
