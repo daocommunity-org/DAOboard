@@ -1,11 +1,11 @@
 require("@nomicfoundation/hardhat-toolbox");
-require('dotenv').config()
+require("dotenv").config();
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
     version: "0.8.9",
-    settings: { optimizer: { enabled: true, runs: 200 } }
+    settings: { optimizer: { enabled: true, runs: 200 } },
   },
   paths: {
     artifacts: "./src/artifacts",
@@ -25,12 +25,12 @@ module.exports = {
     },
     mumbai: {
       url: "https://rpc-mumbai.maticvigil.com",
-      accounts: [""],
+      accounts: [process.env.PRIVATE_KEY],
       blockConfirmations: 6,
     },
   },
   etherscan: {
-    apiKey: "",
+    apiKey: process.env.ETHERSCAN_API_KEY,
   },
   namedAccounts: {
     deployer: {
