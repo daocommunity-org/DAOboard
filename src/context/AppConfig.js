@@ -1,7 +1,7 @@
 import React, { useState, createContext, useEffect } from "react";
 import { SortArray } from "./Utils";
 import { ethers } from "ethers";
-import contr from "../../src/contract/src/artifacts/contracts/Lock.sol/LeaderBoard.json";
+import contr from "../../src/contract/src/artifacts/contracts/dLEAD.sol/dLEAD.json";
 export const AppConfig = createContext();
 
 export const AppProvider = ({ children }) => {
