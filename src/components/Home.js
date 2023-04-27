@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { AppConfig } from '../context/AppConfig'
 import daologo from "../Logo.png";
@@ -8,6 +8,9 @@ import { Box, Modal } from '@mui/material';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import CircularProgress from '@mui/material/CircularProgress';
+import { motion, useScroll } from "framer-motion";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Home = () => {
   const { providerConnected, isadmin, connectWallet, tasks, getVolunteerList, registerForTask, taskLoader, currentUser } = useContext(AppConfig)
@@ -21,7 +24,28 @@ export const Home = () => {
   const [limit, setLimit] = useState({ id: "", lim: 32 })
   const [comment, setComment] = useState("")
   const [loader1, setLoader1] = useState(false)
-  console.log(taskId)
+  const [toastEnable, setToastEnable] = useState(false)
+
+
+  const connectToWallet = async () => {
+    const connection = await connectWallet();
+    if (!connection) {
+      setToastEnable(true)
+      notify();
+    }
+  }
+
+  const notify = () => toast.warn('🦊 Metamask Not Detected!', {
+    position: "top-center",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+
   const handleOpen = (description, members, tokens, taskId) => {
     setTaskId(taskId)
     setMembers(members)
@@ -54,6 +78,7 @@ export const Home = () => {
     }
   }
 
+  const { scrollYProgress } = useScroll();
 
   const navigate = useNavigate();
 
@@ -69,14 +94,30 @@ export const Home = () => {
 
   const mouseLeaveHandler = (id) => {
     document.getElementById(id).addEventListener('mouseleave', () => setLimit({ id: id, lim: 32 }))
-
   }
 
 
-  console.log(currentUser)
+  // console.log(currentUser) 
 
   return (
     <div>
+
+      {toastEnable && <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />}
+      <motion.div
+        className="progress-bar"
+        style={{ scaleX: scrollYProgress }}
+      />
       <Modal
         open={open}
         onClose={handleClose}
@@ -96,12 +137,11 @@ export const Home = () => {
               <button onClick={() => openCloseVolList(taskId)} className='flex justify-center items-center cursor-pointer'> <p className='text-xs font-semibold'>View Volunteers</p> {handleVolList === true ? <ArrowDownwardIcon /> : <DoubleArrowIcon />}</button>
             </div>
             {handleVolList === true && <div className="vollist mt-4 overflow-y-scroll overflow-x-hidden max-h-44 bg-blue-400 p-5 rounded-lg flex flex-col ">
-
               {loader1 === false ? volList.map((dat) => (
                 <div className='flex justify-between items-center mt-4 '>
                   <p>{dat[0]}</p>
                   {currentUser.toLowerCase() === dat[1].toLowerCase() ? <img onClick={() => navigate('/taskstatus/' + dat[1] + '/' + taskId)} className='w-8 animate-spin cursor-pointer transition-all ease-in-out hover:scale-125' src={daologo} /> : ""}
-                  <p id={dat[0] + "xyz"} onMouseLeave={() => mouseLeaveHandler(dat[0] + "xyz")} onMouseEnter={() => handleHover(dat[0] + "xyz")} className='bg-slate-300 p-1 rounded-xl cursor-pointer transition-all ease-in-out'>{dat[1].slice(0, limit.id === dat[0] + "xyz" ? limit.lim : 32)}</p>
+                  <p id={dat[1] + "xyz"} onMouseLeave={() => mouseLeaveHandler(dat[1] + "xyz")} onMouseEnter={() => handleHover(dat[1] + "xyz")} className='bg-slate-300 p-1 rounded-xl cursor-pointer transition-all ease-in-out'>{dat[1].slice(0, limit.id === dat[1] + "xyz" ? limit.lim : 32)}</p>
                 </div>
               )) : <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <CircularProgress color='inherit' />
@@ -115,8 +155,7 @@ export const Home = () => {
       <div className='navbar bg-sky-800 flex gap-4 items-center p-4 justify-between'>
         <div className='flex gap-4'>
           <div className='connectwallet'>
-            <button disabled={providerConnected} onClick={connectWallet} className={providerConnected ? "w-fit p-2 bg-slate-500 rounded-xl  border-2 border-blue-200" : "active:bg-slate-400 w-fit p-2 bg-slate-500 rounded-xl  border-2 border-blue-200 transition-all ease-in-out hover:scale-105"}>{providerConnected ? "Connected" : "Connect Wallet"}</button>
-
+            <button disabled={providerConnected} onClick={connectToWallet} className={providerConnected ? "w-fit p-2 bg-slate-500 rounded-xl  border-2 border-blue-200" : "active:bg-slate-400 w-fit p-2 bg-slate-500 rounded-xl  border-2 border-blue-200 transition-all ease-in-out hover:scale-105"}>{providerConnected ? "Connected" : "Connect Wallet"}</button>
           </div>
 
           <div className='admin self-end'>
@@ -158,7 +197,7 @@ export const Home = () => {
           <div className='flex flex-col bg-sky-800 items-center mx-10 shadow-2xl border-t-2 rounded-xl'>
             <p className='font-bold text-blue-100 text-xl mt-2'>Ongoing Tasks</p>
             <div className="taskList w-full mx-12 flex flex-col items-center justify-center">
-              {taskLoader === false ? tasks.map((dat) => (
+              {taskLoader === false ? tasks.filter((x) => x[4] === true).map((dat) => (
                 <div className="taskItem flex bg-sky-700 flex-col w-4/5 justify-center my-4 shadow-lg border-b-4 border-l-2 border-blue-300 rounded-3xl px-4 py-2 transition-all ease-in-out hover:bg-blue-50 hover:opacity-75">
                   <div className='flex my-2 items-center justify-between'>
                     <p className='taskTitle font-extrabold  bg-sky-100 w-fit rounded-xl p-2'>{dat[1]}</p>
@@ -179,6 +218,24 @@ export const Home = () => {
           </div>
           <div className='flex flex-col bg-sky-800 items-center mx-10 shadow-2xl border-t-2 rounded-xl'>
             <p className='font-bold text-blue-100 text-xl mt-2'>Completed Tasks</p>
+            <div className="taskList w-full mx-12 flex flex-col items-center justify-center">
+              {taskLoader === false ? tasks.filter((x) => x[4] === false).map((dat) => (
+                <div className="taskItem flex bg-sky-700 flex-col w-4/5 justify-center my-4 shadow-lg border-b-4 border-l-2 border-blue-300 rounded-3xl px-4 py-2 transition-all ease-in-out hover:bg-blue-50 hover:opacity-75">
+                  <div className='flex my-2 items-center justify-between'>
+                    <p className='taskTitle flex gap-4 font-extrabold  bg-red-400 w-fit rounded-xl p-2'>{dat[1]} <p className='text-red-900'>CLOSED</p> </p>
+                    <p className='font-semibold mx-2'>🪙: {parseInt(dat[3]._hex)}</p>
+                  </div>
+                  <p className='taskDesc font-semibold mx-2'>{dat[2].slice(0, 100) + "...."}</p>
+                  <div className="flex justify-between mx-4 items-center">
+                    <div className='mt-6'>
+                      <GroupIcon /> : {parseInt(dat[5]._hex)}
+                    </div>
+                  </div>
+                </div>
+              )) : <Box sx={{ marginTop: '33px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <CircularProgress color='inherit' />
+              </Box>}
+            </div>
           </div>
         </div>
       </section>
