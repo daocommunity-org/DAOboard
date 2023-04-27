@@ -31,6 +31,7 @@ contract LeaderBoard is proToken {
         bool status; // open or close
         uint256 count;
         address initiator;
+        uint256 timeInitiated;
     }
 
     Task[] public taskArray;

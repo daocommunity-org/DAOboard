@@ -12,18 +12,14 @@ export const AppProvider = ({ children }) => {
   const [tasks, setTasks] = useState([])
   const [taskLoader, setTaskLoader] = useState(false)
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  // const [signedContract, setsignedContract] = useState()
-
   const contractAddress = "0xc880f9c2a8CdD09F93C28ecb517142D89560824D";
   const ABI = contr.abi;
-  const providerContract = new ethers.Contract(contractAddress, ABI, provider);
 
 
   let signedContract;
 
 
-  async function requestAccount() {
+  const requestAccount = async () => {
     const accns = await window.ethereum.request({
       method: "eth_requestAccounts",
     }); // prompt the user to connect one of their metamask accounts if they haven't  already connected
@@ -32,72 +28,91 @@ export const AppProvider = ({ children }) => {
   }
 
   const connectWallet = async () => {
-    await requestAccount();
-    const signer = provider.getSigner();
-    const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
-    signedContract = newsignedContract;
-    console.log("connected");
-    await adminStatus();
+    if (window.ethereum) {
+      await requestAccount();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
+      signedContract = newsignedContract;
+      console.log("connected");
+      await adminStatus();
+      return true
+    } else {
+      return false
+    }
+
   };
 
   const addMemberR = async (name, regNo) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
     await newsignedContract.addMember(name, regNo);
   };
 
   const editRegNo = async (newregno) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
     await newsignedContract.editRegNo(newregno);
   };
 
   const pointsToToken = async (val) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
     await newsignedContract.pointsToToken(val);
   }
 
   const terminateUser = async (address) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
     await newsignedContract.terminateUser(address);
   };
+
   const deleteUser = async (walletAddress) => {
     await signedContract.deleteUser(walletAddress);
   };
 
-  const setCoordinator = async (walletAddress) => {
-    await signedContract.setCoordinator(walletAddress);
+  const setCoordinator = async (walletAddress, role) => {
+    await signedContract.setCoordinator(walletAddress, role);
   };
+
   const revertCoordinator = async (walletAddress) => {
     await signedContract.revertCoordinator(walletAddress);
   };
 
   const addTask = async (taskName, taskDesc, points) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
     await newsignedContract.addTask(taskName, taskDesc, points)
   }
 
   const addPoints = async (walletAddress, addVal) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
     await newsignedContract.addPoints(walletAddress, addVal);
   };
+
   const minusPoints = async (walletAddress, addVal) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
     await newsignedContract.minusPoints(walletAddress, addVal);
   };
 
   const approveTokens = async (walletAddress, tokens) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
     await newsignedContract.approveTx(walletAddress, tokens);
   }
 
   const makeAdmin = async (walletAddress) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
     await newsignedContract.makeAdmin(walletAddress);
@@ -108,12 +123,14 @@ export const AppProvider = ({ children }) => {
   };
 
   const registerForTask = async (taskId, comment) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
     await newsignedContract.registerForTask(taskId, comment)
   }
 
   const returnComments = async (taskId, address) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
     const comment = await newsignedContract.returnTaskComments(taskId, address)
@@ -121,6 +138,7 @@ export const AppProvider = ({ children }) => {
   }
 
   const returnTaskDone = async (taskId, address) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
     const taskDone = await newsignedContract.returnTaskDone(taskId, address)
@@ -128,6 +146,7 @@ export const AppProvider = ({ children }) => {
   }
 
   const getVolunteerList = async (taskId) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
     let volList = []
@@ -139,7 +158,8 @@ export const AppProvider = ({ children }) => {
       let id = await newsignedContract.taskRegistrations(address)
       if (parseInt(id._hex) === taskId) {
         console.log("first")
-        volList[k] = [temp.name, temp.walletAddress]
+        let isDone = await returnTaskDone(parseInt(id._hex), address)
+        volList[k] = [temp.name, temp.walletAddress, isDone]
         k++
       }
     }
@@ -148,24 +168,43 @@ export const AppProvider = ({ children }) => {
   }
 
   const completeTask = async (taskId) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
     await newsignedContract.taskCompleted(taskId)
   }
 
+  const closeTask = async (taskId) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
+    await newsignedContract.closeTask(taskId)
+  }
+
+  const reopenTask = async (taskId) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
+    await newsignedContract.reopenTask(taskId)
+  }
+
   useEffect(() => {
-    const getData = async () => {
-      let data = await providerContract.returnData();
-      setmembersdata(SortArray(data));
-      setTaskLoader(true)
-      let tasks = await providerContract.returnTasks();
-      setTasks(tasks)
-      setTaskLoader(false)
-      console.log("data is ", data);
-      console.log("tasks are ", tasks);
-      console.log(currentUser)
-    };
-    getData();
+    if (window.ethereum) {
+      const getData = async () => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const providerContract = new ethers.Contract(contractAddress, ABI, provider);
+        let data = await providerContract.returnData();
+        setmembersdata(SortArray(data));
+        setTaskLoader(true)
+        let tasks = await providerContract.returnTasks();
+        setTasks(tasks)
+        setTaskLoader(false)
+        console.log("data is ", data);
+        console.log("tasks are ", tasks);
+        console.log(currentUser)
+      };
+      getData();
+    }
   }, []);
 
   return (
@@ -195,7 +234,9 @@ export const AppProvider = ({ children }) => {
         registerForTask,
         returnComments,
         returnTaskDone,
-        completeTask
+        completeTask,
+        closeTask,
+        reopenTask
       }}
     >
       {children}
