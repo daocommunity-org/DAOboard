@@ -9,7 +9,7 @@ import "./proTokens.sol";
  * @custom:dev-run-script ./scripts/deploy_with_ethers.ts
  */
 
-contract dLEAD is proToken {
+contract DAOboard is proToken {
   address public Owner = msg.sender;
   struct Member {
     string name;
@@ -217,7 +217,16 @@ contract dLEAD is proToken {
       "Only admin can call this function"
     );
     taskArray.push(
-      Task(taskCount, taskName, taskDesc, points, true, 0, msg.sender,block.timestamp)
+      Task(
+        taskCount,
+        taskName,
+        taskDesc,
+        points,
+        true,
+        0,
+        msg.sender,
+        block.timestamp
+      )
     );
     taskCount++;
   }

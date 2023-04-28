@@ -2,7 +2,7 @@ const hre = require("hardhat");
 const { verify } = require("./verify");
 async function main() {
   // We get the contract to deploy
-  const Cave = await hre.ethers.getContractFactory("dLEAD");
+  const Cave = await hre.ethers.getContractFactory("DAOboard");
   // We set the constructor of the contract within a message
   const caveContract = await Cave.deploy();
   await caveContract.deployed();
