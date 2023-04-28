@@ -191,6 +191,7 @@ export const AppProvider = ({ children }) => {
 
   useEffect(() => {
     if (window.ethereum) {
+      connectWallet();
       const getData = async () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const providerContract = new ethers.Contract(
