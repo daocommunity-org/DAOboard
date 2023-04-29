@@ -8,6 +8,7 @@ function Register() {
     const { addMemberR, providerConnected } = useContext(AppConfig);
     const navigate = useNavigate();
 
+    const l = membersdata.length;
     const add = () => {
         for (var i = 0; i < l; i++) {
             if (regno === membersdata[i].regNo || name.toLowerCase() === membersdata[i].name.toLowerCase()) {
