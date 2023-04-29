@@ -5,7 +5,7 @@ function Register() {
     const [name, setName] = useState("")
     const [regno, setRegno] = useState("")
     // console.log(name, regno)
-    const { addMemberR, providerConnected } = useContext(AppConfig);
+    const { addMemberR, providerConnected , membersdata } = useContext(AppConfig);
     const navigate = useNavigate();
 
     const l = membersdata.length;
