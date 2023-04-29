@@ -9,15 +9,22 @@ function Register() {
     const navigate = useNavigate();
 
     const add = () => {
-        addMemberR(name, regno);
-        // console.log(providerConnected)
+        for (var i = 0; i < l; i++) {
+            if (regno === membersdata[i].regNo || name.toLowerCase() === membersdata[i].name.toLowerCase()) {
+              alert("Member already exists!!");
+              break;
+            } else {
+              addMemberR(name, regno);
+              break;
+            }
+        }
     }
 
     useEffect(() => {
-        if (!providerConnected) {
-            navigate('/')
-            alert("Please connect your wallet to access the leaderboard")
-        }
+        // if (!providerConnected) {
+        //     navigate('/')
+        //     alert("Please connect your wallet to access the leaderboard")
+        // }
     }, [])
     return (
         <div className='bg-sky-900 h-screen flex items-center justify-center'>
