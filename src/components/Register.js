@@ -13,7 +13,7 @@ function Register() {
   const add = () => {
     var f = -1;
     for (var i = 0; i < l; i++) {
-      console.log(membersdata[i].regNo);
+
       if (
         regno === membersdata[i].regNo ||
         name.toLowerCase() === membersdata[i].name.toLowerCase()
