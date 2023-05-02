@@ -1,70 +1,43 @@
-# Getting Started with Create React App
+# DAOBOARD - DECENTRALIZED LEADERBOARD APP by DAO Community VITC
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a Solidity smart contract that manages a DAOboard, which is essentially a board of directors for a decentralized autonomous organization (DAO). The contract extends another contract called `proToken`, which defines some basic ERC-20 token functionality.
 
-## Available Scripts
 
-In the project directory, you can run:
+## Code Structure
 
-### `npm start`
+The `DAOboard` contract has several functions that can be used to interact with the `Member` and `Task` structs. Some of the key functions include:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- `addMember`: adds a new member to the DAO by creating a new `Member` struct and adding it to the `members` array.
+- `getMemberDetails`: returns the `Member` struct for a given member, based on their registration number.
+- `addPoints`: adds a specified number of points to a member's account.
+- `minusPoints`: removes a specified number of points from a member's account.
+- `pointsToToken`: converts a specified number of points to tokens, which can be claimed by the member.
+- `setCoordinator`: assigns a member to be a coordinator for a specific department.
+- `revertCoordinator`: removes a member's coordinator status.
+- `registerStatus`: checks whether the sender is registered as a member of the DAO.
+- `isAdmin`: checks whether the sender is an admin of the DAO.
+- `makeAdmin`: promotes a member to admin status.
+- `revokeAdmin`: demotes an admin to member status.
+- `deleteUser`: removes a member from the DAO.
+- `terminateUser`: deactivates a member's account.
+- `returnData`: returns an array of all members in the DAO.
+- `returnTasks`: returns an array of all tasks in the DAO.
+- `returnTaskDone`: checks whether a member has completed a specific task.
+- `returnTaskEligible`: checks whether a member is eligible to complete a specific task.
+- `returnTaskComments`: returns any comments that a member has made about a specific task.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+The contract also defines several mappings that are used to store information about the DAO's members and tasks, including:
 
-### `npm test`
+- `regNoOf`: a mapping that maps a member's Ethereum address to their registration number.
+- `Id`: a mapping that maps a member's Ethereum address to their index in the `members` array.
+- `isAdmin`: a mapping that maps a member's Ethereum address to a boolean value indicating whether they are an admin.
+- `isRegistered`: a mapping that maps a member's Ethereum address to a boolean value indicating whether they are registered as a member of the DAO.
+- `registeredAddresses`: an array of all Ethereum addresses that are registered as members of the DAO.
+- `taskRegistrations`: a mapping that maps a member's Ethereum address to the number of tasks they have registered for.
+- `taskDone`: a mapping that maps a task ID and a member's Ethereum address to a boolean value indicating whether the member has completed the task.
+- `taskEligible`: a mapping that maps a task ID and a member's Ethereum address to a boolean value indicating whether the member is eligible to complete the task.
+- `taskComments`: a mapping that maps a task ID and a member's Ethereum address to any comments that the member has made about the task.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The contract also has a constructor function that sets the sender's Ethereum address as an admin and initializes some other variables. 
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Finally, the contract includes several modifiers that can be used to restrict access to certain functions based on a member's admin status or whether they are registered as a member of the DAO.
