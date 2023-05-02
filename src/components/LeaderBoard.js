@@ -51,7 +51,7 @@ function LeaderBoard() {
   };
 
   useEffect(() => {
-    
+
   }, []);
   return (
     <div>
@@ -128,13 +128,13 @@ function LeaderBoard() {
                   <td class="px-6 py-4 text-black">
                     {parseInt(dat[2]._hex, 16)}
                   </td>
-                  <td class="px-6 py-4 text-black">{dat[5]}</td>
+                  <td class="px-6 py-4 text-black">{dat[4] ? dat[5] : "member"}</td>
                   <td class="px-6 py-4 text-black">
                     {parseInt(dat[7]._hex, 16) ? parseInt(dat[7]._hex, 16) : ""}
                   </td>
                   <td>
                     {parseInt(dat[7]._hex, 16) !== 0 &&
-                    dat[6].toLowerCase() === currentUser.toLowerCase() ? (
+                      dat[6].toLowerCase() === currentUser.toLowerCase() ? (
                       <button
                         onClick={() =>
                           handleOpen(dat[0], parseInt(dat[7]._hex, 16))

@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { AppConfig } from '../context/AppConfig'
+
+
 function Register() {
     const [name, setName] = useState("")
     const [regno, setRegno] = useState("")
@@ -10,7 +12,7 @@ function Register() {
 
     const add = () => {
         addMemberR(name, regno);
-        // console.log(providerConnected)
+
     }
 
     useEffect(() => {

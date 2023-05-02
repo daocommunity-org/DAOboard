@@ -141,6 +141,7 @@ contract DAOboard is proToken {
   function revertCoordinator(address walletAddress) public payable {
     require(isAdmin[msg.sender], "Non admin access denied");
     members[Id[walletAddress]].coordinator = false;
+    //members[Id[walletAddress]].role = "member"
   }
 
   function deleteUser(address walletAddress) public payable {

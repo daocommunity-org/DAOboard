@@ -12,7 +12,7 @@ export const AppProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
   const [taskLoader, setTaskLoader] = useState(false);
 
-  const contractAddress = "0xffC0F868BaBaCd728476741f40f2bC9742aa4212";
+  const contractAddress = "0x43f9ddDA560f74F802cB088D3D310c0a8ab4c346";
   const ABI = contr.abi;
 
   let signedContract;
@@ -77,11 +77,17 @@ export const AppProvider = ({ children }) => {
   };
 
   const setCoordinator = async (walletAddress, role) => {
-    await signedContract.setCoordinator(walletAddress, role);
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
+    await newsignedContract.setCoordinator(walletAddress, role);
   };
 
   const revertCoordinator = async (walletAddress) => {
-    await signedContract.revertCoordinator(walletAddress);
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
+    await newsignedContract.revertCoordinator(walletAddress);
   };
 
   const addTask = async (taskName, taskDesc, points) => {
