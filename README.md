@@ -41,3 +41,31 @@ The contract also defines several mappings that are used to store information ab
 The contract also has a constructor function that sets the sender's Ethereum address as an admin and initializes some other variables. 
 
 Finally, the contract includes several modifiers that can be used to restrict access to certain functions based on a member's admin status or whether they are registered as a member of the DAO.
+
+## Set up local environment
+
+- Fork the repository.
+  
+  ![image](https://user-images.githubusercontent.com/90605717/236876460-5be8a23f-e743-4789-9662-a28ffdce8c9d.png)
+  
+- To clone the github repository locally, use the following command.
+
+  ```
+  git clone https://github.com/<username>/DAOboard.git
+  ```
+  
+- Install Packages.
+
+  ```
+  npm install 
+  ```
+  or
+  ```
+  npm i
+  ```
+  
+- Run it locally
+
+  ```
+  npm start
+  ```

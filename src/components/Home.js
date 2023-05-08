@@ -164,7 +164,7 @@ export const Home = () => {
         </div>
 
         <div className='flex self-end'>
-          <img className='w-10 animate-spin' src={daologo} alt="" />
+          <img className='w-10 animate-[spin_3s_linear_infinite]' src={daologo} alt="" />
         </div>
       </div>
 
@@ -179,18 +179,18 @@ export const Home = () => {
         <div className="button m-auto flex gap-10 flex-wrap">
           <div className="viewldboard">
             <Link to="/leaderboard">
-              <button className="w-fit px-6 py-4 bg-slate-500 rounded-xl active:bg-slate-400  hover:bg-sky-100 transition-all ease-in-out hover:scale-105">View Leaderboard</button>
+              <button className="w-fit px-6 py-4 bg-slate-500 rounded-xl border-2 border-blue-200 active:bg-slate-400 hover:bg-sky-100 transition-all ease-in-out hover:scale-105">View Leaderboard</button>
             </Link>
 
           </div>
           <div className='registerldboard'>
             <Link to="/register">
-              <button className="w-fit px-6 py-4 bg-slate-500 rounded-xl active:bg-slate-400  hover:bg-sky-100 transition-all ease-in-out hover:scale-105">Register for Leaderboard</button>
+              <button className="w-fit px-6 py-4 bg-slate-500 rounded-xl border-2 border-blue-200 active:bg-slate-400 hover:bg-sky-100 transition-all ease-in-out hover:scale-105">Register for Leaderboard</button>
             </Link>
           </div>
         </div>
         <div className="faucet mb-56">
-          <p className='text-slate-300 font-semibold'>Mumbai Faucet - <a className='px-1 py-1.5 text-black bg-slate-400 rounded-xl active:bg-slate-300  hover:bg-sky-100 transition-all ease-in-out hover:scale-105' href="https://mumbaifaucet.com/" target='_blank'>CLICK HERE</a></p>
+          <p className='text-slate-300 font-semibold'>Mumbai Faucet - <a className='px-1.5 py-1.5 text-black bg-slate-400 rounded-xl border-2 border-blue-200 active:bg-slate-300  hover:bg-sky-100 transition-all ease-in-out hover:scale-105' href="https://mumbaifaucet.com/" target='_blank'>CLICK HERE</a></p>
         </div>
       </div>
 
