@@ -11,6 +11,7 @@
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "animate.css": "^4.1.1",
+    "dependencies": "^0.0.1",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.0",
     "firebase": "^9.21.0",
