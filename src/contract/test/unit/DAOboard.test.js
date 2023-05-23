@@ -1,18 +1,7 @@
 //Here we are going to write some unit tests for DAOboard.sol
-const { assert, expect } = require("chai");
-const { time } = require("@openzeppelin/test-helpers");
-
-const {
-  getNamedAccounts,
-  deployments,
-  ethers,
-  network,
-  artifacts,
-} = require("hardhat");
-const {
-  developmentChains,
-  networkConfig,
-} = require("../../helper-hardhat-config");
+const { expect } = require("chai");
+const { deployments, ethers, network } = require("hardhat");
+const { developmentChains } = require("../../helper-hardhat-config");
 !developmentChains.includes(network.name)
   ? describe.skip
   : describe("DAO board Unit Tests 🚀🚀", function () {
@@ -22,14 +11,13 @@ const {
         tokenInstance,
         Owner,
         memberAddress,
-        memberName = "Ayush Srivastava",
-        memberRegNo = "21BPS1234",
-        memberDept = "CSE CPS",
-        memberName2 = "Ankush Jha",
-        memberRegNo2 = "21BPS4321",
+        memberName = "John Doe",
+        memberRegNo = "21BCE0001",
+        memberDept = "Design",
+        memberName2 = "Marie",
+        memberRegNo2 = "21BCE0002",
         taskName = "Marketing",
-        taskDescription =
-          "Marketing for the upcoming event in Netaji Auditorium",
+        taskDescription = "Marketing for the upcoming event.",
         taskPoints = 100,
         comments = "Let's do it!";
 
@@ -46,6 +34,7 @@ const {
           await ethers.getSigners();
       });
 
+      /* Testing the constructor from DAOboard.sol */
       describe("constructor", function () {
         it("should set the contract Owner as admin", async function () {
           const isAdmin = await daoBoardInstance.AdminStatus();
@@ -291,7 +280,6 @@ const {
       describe("Testing the task functions...", async function () {
         //Adding the tasks
         it("should add the tasks", async function () {
-          // const currentTime = await time.latest();
           await daoBoardInstance
             .connect(memberAddress)
             .addMember(memberName, memberRegNo);
@@ -316,8 +304,6 @@ const {
           expect(tasks[0].status).to.equal(true);
           expect(tasks[0].count).to.equal(0);
           expect(tasks[0].initiator).to.equal(Owner.address);
-          // expect(tasks[0].timeInitiated).to.equal(currentTime);
-
           await expect(
             daoBoardInstance
               .connect(memberAddress2)
