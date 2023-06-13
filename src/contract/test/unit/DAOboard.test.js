@@ -2,6 +2,7 @@
 const { expect } = require("chai");
 const { deployments, ethers, network } = require("hardhat");
 const { developmentChains } = require("../../helper-hardhat-config");
+const ether = require("@openzeppelin/test-helpers/src/ether");
 !developmentChains.includes(network.name)
   ? describe.skip
   : describe("DAO board Unit Tests 🚀🚀", function () {
@@ -34,7 +35,6 @@ const { developmentChains } = require("../../helper-hardhat-config");
           await ethers.getSigners();
       });
 
-      /* Testing the constructor from DAOboard.sol */
       describe("constructor", function () {
         it("should set the contract Owner as admin", async function () {
           const isAdmin = await daoBoardInstance.AdminStatus();
@@ -253,26 +253,50 @@ const { developmentChains } = require("../../helper-hardhat-config");
       //Claiming the tokens
       describe("Claiming the tokens by the members...", async function () {
         //It should covert points to tokens
-        it.skip("should convert the points to tokens", async function () {
-          const val = 50;
+        it("should revert if user is not registered", async function () {
+          // Test that the function reverts if the user is not registered
+          await expect(daoBoardInstance.connect(memberAddress).pointsToToken(10)).to.be.revertedWith("Not registered");
+        });
+      
+        it("should revert if user does not have enough points", async function () {
+          // Test that the function reverts if the user does not have enough points
+          await daoBoardInstance
+          .connect(memberAddress)
+          .addMember(memberName, memberRegNo);          
+          await expect(daoBoardInstance.connect(memberAddress).pointsToToken(10)).to.be.revertedWith("Not enough Points");
+        });
+      
+        it("should revert if user does not have enough claimable tokens", async function () {
+          // Test that the function reverts if the user does not have enough claimable tokens
+          await daoBoardInstance
+          .connect(memberAddress)
+          .addMember(memberName, memberRegNo);  
+          await daoBoardInstance.addPoints(memberAddress.address, 100);
+          await expect(daoBoardInstance.connect(memberAddress).pointsToToken(200)).to.be.revertedWith("Not enough Points");
+        });
+      
+        it("should transfer tokens correctly", async function () {
+          // Test that the function transfers tokens correctly
           await daoBoardInstance
             .connect(memberAddress)
-            .addMember(memberName, memberRegNo);
+            .addMember(memberName, memberRegNo);  
+          await daoBoardInstance.addPoints(memberAddress.address, 100);
+          
+          const id = await daoBoardInstance.giveId(memberAddress.address);
+          const member = await daoBoardInstance.returnData();
+          expect(member[id].claimableTokens).to.equal(100); 
 
-          await daoBoardInstance
-            .connect(Owner)
-            .addPoints(memberAddress.address, 100);
+          await tokenInstance.transfer(Owner.address, 100);
 
-          await daoBoardInstance
-            .connect(Owner)
-            .approveTx(memberAddress.address, val);
-          await daoBoardInstance.connect(memberAddress).pointsToToken(val);
-          const proTokens = ethers.utils.parseEther("50");
+          const initialBalance = await tokenInstance.balanceOf(memberAddress.address);
+          
+          await daoBoardInstance.connect(Owner).approveTx(memberAddress.address, 10);
+          await daoBoardInstance.connect(memberAddress).pointsToToken(10);
 
-          expect(await tokenInstance.balanceOf(memberAddress.address)).to.equal(
-            proTokens
-          );
+          const finalBalance = await tokenInstance.balanceOf(memberAddress.address);
+          expect(finalBalance).to.equal(initialBalance.add(ethers.utils.parseEther("10")));
         });
+
       });
 
       //Related to tasks
@@ -352,26 +376,27 @@ const { developmentChains } = require("../../helper-hardhat-config");
           ).to.be.revertedWith("Not registered member");
         });
 
-        //Deleting the tasks - deleting the tasks is not working
-        it.skip("should delete the tasks", async function () {
+        it("should delete a task", async function () {
+          // Add a task to the DAO board
+          await daoBoardInstance.connect(Owner).addTask(taskName, taskDescription, taskPoints);
+          
+          // Get the ID of the task
           const taskId = 0;
-          await daoBoardInstance
-            .connect(memberAddress)
-            .addMember(memberName, memberRegNo);
-
-          await daoBoardInstance
-            .connect(Owner)
-            .addTask(taskName, taskDescription, taskPoints);
-
-          const tasks = await daoBoardInstance.returnTasks();
+        
+          // Delete the task
           await daoBoardInstance.connect(Owner).deleteTask(taskId);
-          console.log(tasks[taskId]);
-          expect(tasks[taskId]).to.equal("0");
+        
+          // Check that the task was deleted
+          const task = await daoBoardInstance.returnTasks();
+          expect(task[taskId].taskName).to.equal("");
+          expect(task[taskId].taskDesc).to.equal("");
+          expect(task[taskId].pointsAlotted).to.equal(0);
+        
+          // Try to delete the task again as a non-admin member
           await expect(
             daoBoardInstance.connect(memberAddress).deleteTask(taskId)
           ).to.be.revertedWith("Only admin can call this function");
         });
-
         //Closing a task
         it("should close the task", async function () {
           const taskId = 0;
