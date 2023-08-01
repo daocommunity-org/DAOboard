@@ -2,7 +2,7 @@
 
 pragma solidity >=0.8.9;
 import "./proTokens.sol";
-
+import "./IEnrollment.sol";
 /**
  * @title Storage
  * @dev Store & retrieve value in a variable
@@ -11,6 +11,17 @@ import "./proTokens.sol";
 
 contract DAOboard is proToken {
   address public Owner = msg.sender;
+
+  struct memberProfile {
+    uint256 index;
+    uint256 timeEnrolled;
+    address walletAddress;
+    string name;
+    string uid;
+    string officialEmail;
+    string phoneNumber;
+    string whatsappNumber;
+  }
   struct Member {
     string name;
     string regNo;
@@ -43,6 +54,7 @@ contract DAOboard is proToken {
   mapping(address => bool) public isAdmin;
   mapping(address => bool) isRegistered;
   address[] registeredAddresses;
+  //memberProfile[] storage mems;
 
   mapping(address => uint256) public taskRegistrations;
   mapping(uint256 => mapping(address => bool)) public taskDone;
@@ -136,6 +148,7 @@ contract DAOboard is proToken {
 
   function addMember(string memory name, string memory regNo) public payable {
     require(!isRegistered[msg.sender], "User already registered");
+    require(Enrollment(0x0f5A59e8E8c3C84f0d4fFcf8173389A41eb2573b).Enrolled(msg.sender) == true , "Not enrolled in the Community");
     isRegistered[msg.sender] = true;
     Id[msg.sender] = length;
     length += 1;

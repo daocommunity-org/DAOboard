@@ -2,6 +2,7 @@ import React, { useState, createContext, useEffect } from "react";
 import { SortArray } from "./Utils";
 import { ethers } from "ethers";
 import contr from "../../src/contract/src/artifacts/contracts/DAOboard.sol/DAOboard.json";
+import icontr from "../../src/contract/src/artifacts/contracts/IEnrollment.sol/Enrollment.json";
 export const AppConfig = createContext();
 
 export const AppProvider = ({ children }) => {
@@ -9,12 +10,14 @@ export const AppProvider = ({ children }) => {
   const [membersdata, setmembersdata] = useState([]);
   const [isadmin, setisAdmin] = useState(false);
   const [currentUser, setcurrentUser] = useState();
+  const [enrollData, setenrollData] = useState();
   const [tasks, setTasks] = useState([]);
   const [taskLoader, setTaskLoader] = useState(false);
-
-  const contractAddress = "0xffC0F868BaBaCd728476741f40f2bC9742aa4212";
+  const contractAddress = "0x0570d8BD564969120FE29D0B8F008edbA2B8b387";
+  const enrollmentcontractAddress =
+    "0x0f5A59e8E8c3C84f0d4fFcf8173389A41eb2573b";
   const ABI = contr.abi;
-
+  const eABI = icontr.abi;
   let signedContract;
 
   const requestAccount = async () => {
@@ -48,7 +51,11 @@ export const AppProvider = ({ children }) => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
-    await newsignedContract.addMember(name, regNo);
+    if ((await getEnrollmentStatus()) === true) {
+      await newsignedContract.addMember(name, regNo);
+    } else {
+      alert("Please Register yourself in the DAO Enrollment Contract");
+    }
   };
 
   const editRegNo = async (newregno) => {
@@ -179,6 +186,24 @@ export const AppProvider = ({ children }) => {
     const signer = provider.getSigner();
     const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
     await newsignedContract.taskCompleted(taskId);
+  };
+
+  const getEnrollmentStatus = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const newsignedContract = new ethers.Contract(
+      enrollmentcontractAddress,
+      eABI,
+      signer
+    );
+
+    let data = await newsignedContract.Enrolled(currentUser);
+
+    if (data === true) {
+      return true;
+    }
+
+    return false;
   };
 
   const closeTask = async (taskId) => {
