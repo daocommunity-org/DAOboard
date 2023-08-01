@@ -15,7 +15,7 @@ export const AppProvider = ({ children }) => {
   const [taskLoader, setTaskLoader] = useState(false);
   const contractAddress = "0x0570d8BD564969120FE29D0B8F008edbA2B8b387";
   const enrollmentcontractAddress =
-    "0x0f5A59e8E8c3C84f0d4fFcf8173389A41eb2573b";
+    "0x693765183Cc60722aFE28e8329D82790A6B1346B";
   const ABI = contr.abi;
   const eABI = icontr.abi;
   let signedContract;
