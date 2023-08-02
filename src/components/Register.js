@@ -9,7 +9,6 @@ function Register() {
     const navigate = useNavigate();
 
     const l = membersdata.length;
-    console.log(l);
     const add = () => {
         var f = -1;
         for (var i = 0; i < l; i++) {

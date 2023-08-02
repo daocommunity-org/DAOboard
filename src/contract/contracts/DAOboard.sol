@@ -148,7 +148,7 @@ contract DAOboard is proToken {
 
   function addMember(string memory name, string memory regNo) public payable {
     require(!isRegistered[msg.sender], "User already registered");
-    require(Enrollment(0x693765183Cc60722aFE28e8329D82790A6B1346B).Enrolled(msg.sender) == true , "Not enrolled in the Community");
+    require(Enrollment(0xc15a65D129D2a3D4C4Ea10270755F15E6FcF5b42).Enrolled(msg.sender) == true , "Not enrolled in the Community");
     isRegistered[msg.sender] = true;
     Id[msg.sender] = length;
     length += 1;
