@@ -2,7 +2,12 @@ import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { AppConfig } from '../context/AppConfig'
 import daologo from "../Logo.png";
+import polylogo from "../polygon.png"
+import sscan from "../sscan.png"
 import daologo1 from "../logo_type_white.png";
+import insta from "../insta.png"
+import twitter from "../twitter.png"
+import link from "../link.png"
 import GroupIcon from '@mui/icons-material/Group';
 import { Box, Modal } from '@mui/material';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
@@ -147,7 +152,7 @@ export const Home = () => {
         </Box>
       </Modal>
       {/* navbar */}
-      <div className='navbar bg-sky-800 flex gap-4 items-center p-4 justify-between'>
+      <div className='navbar bg-sky-800  flex gap-4 items-center p-4 justify-between'>
         <div className='flex gap-4'>
           <div className='connectwallet'>
             <button disabled={providerConnected} onClick={connectToWallet} className={providerConnected ? "w-fit p-2 bg-slate-500 rounded-xl  border-2 border-blue-200" : "active:bg-slate-400 w-fit p-2 bg-slate-500 rounded-xl  border-2 border-blue-200 transition-all ease-in-out hover:scale-105"}>{providerConnected ? "Connected" : "Connect Wallet"}</button>
@@ -237,7 +242,36 @@ export const Home = () => {
           </div>
         </div>
       </section>
+      <footer className='bg-sky-900 px-4 py-4 flex flex-col gap-12 md:flex-row shadow-xl  justify-between items-center'>
+        <div className='polygon flex flex-col items-center'>
+          <p className='font-semibold font-sans -mb-6 text-gray-200'>POWERED BY</p>
+          <a href="https://mumbai.polygonscan.com/address/0x7C4AA2D25087BE8AA7c7F53cC1600308d436A3E0" target='_blank'>
+            <img className='w-32' src={polylogo} alt="polygonlogo" />
+          </a>
 
+        </div>
+        <div className='flex flex-col'>
+          <p className='text-white font-bold font-sans text-sm md:text-xl'>Made with 💗 by DAO-Community-VITC</p>
+          <div className="socials flex gap-12 justify-evenly">
+            <a href="https://twitter.com/DaoVitcc" target='_blank'>
+              <img className="w-8 m-2" src={twitter} alt="twitter" />
+            </a>
+            <a href="https://www.instagram.com/dao_vitcc/?hl=en" target='_blank'>
+              <img className="w-8 m-2" src={insta} alt="insta" />
+
+            </a>
+
+            <a href="https://in.linkedin.com/company/daovitcc" target='_blank'>
+              <img className="w-8 m-2" src={link} alt="link" />
+            </a>
+          </div>
+        </div>
+        <div className='flex flex-col items-center'>
+          <p className='font-semibold font-sans text-gray-200 -mb-2'>CONTRACTS SCANNED BY</p>
+          <a href="https://solidityscan.com/" target='_blank'><img className='w-16' src={sscan} alt="sscan" /></a>
+
+        </div>
+      </footer>
     </div>
   )
 }
