@@ -13,7 +13,7 @@ export const AppProvider = ({ children }) => {
   const [enrollData, setenrollData] = useState();
   const [tasks, setTasks] = useState([]);
   const [taskLoader, setTaskLoader] = useState(false);
-  const contractAddress = "0x7C4AA2D25087BE8AA7c7F53cC1600308d436A3E0";
+  const contractAddress ="0x7C4AA2D25087BE8AA7c7F53cC1600308d436A3E0";
   const enrollmentcontractAddress =
     "0xc15a65D129D2a3D4C4Ea10270755F15E6FcF5b42";
   const ABI = contr.abi;
@@ -129,6 +129,16 @@ export const AppProvider = ({ children }) => {
     const signer = provider.getSigner();
     const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
     await newsignedContract.approveTx(walletAddress, tokens);
+  };
+
+  const allowanceCheck = async (walletAddress) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const newsignedContract = new ethers.Contract(contractAddress, ABI, signer);
+    return await newsignedContract.allowance(
+      "0x2FB51A0863C15B0B19a370E5dE91C5D54ea0a0b5",
+      walletAddress
+    );
   };
 
   const makeAdmin = async (walletAddress) => {
@@ -280,6 +290,7 @@ export const AppProvider = ({ children }) => {
         completeTask,
         closeTask,
         reopenTask,
+        allowanceCheck,
       }}
     >
       {children}
