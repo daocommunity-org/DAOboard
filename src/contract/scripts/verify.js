@@ -15,5 +15,5 @@ const verify = async (contractAddress, args) => {
     }
   }
 };
-
+verify("0x92CDca30876B53Cea26fecFc5258AB47cd9653c4",[])
 module.exports = { verify };

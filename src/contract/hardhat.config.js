@@ -27,10 +27,12 @@ module.exports = {
       url: "https://rpc-mumbai.maticvigil.com",
       accounts: [process.env.PRIVATE_KEY],
       blockConfirmations: 6,
+
     },
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
+    timeout: 100000000
   },
   namedAccounts: {
     deployer: {

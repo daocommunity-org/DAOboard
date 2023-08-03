@@ -54,7 +54,13 @@ export const AppProvider = ({ children }) => {
     if ((await getEnrollmentStatus()) === true) {
       await newsignedContract.addMember(name, regNo);
     } else {
-      alert("Please Register yourself in the DAO Enrollment Contract");
+      if (
+        window.confirm(
+          `Please Register yourself in the DAO Enrollment Contract`
+        ) === true
+      ) {
+        window.location.href = "https://dao-enroll-mumbaishift.vercel.app/";
+      }
     }
   };
 
