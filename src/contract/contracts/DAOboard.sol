@@ -157,7 +157,6 @@ contract DAOboard is proToken {
       Member(name, regNo, 0, true, false, "member", msg.sender, 0, false)
     );
     regNoOf[msg.sender] = regNo;
-    isAdmin[msg.sender] = false;
   }
 
   function terminateUser(address walletAddress) public payable {
