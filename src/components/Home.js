@@ -8,7 +8,6 @@ import { Box, Modal } from '@mui/material';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import CircularProgress from '@mui/material/CircularProgress';
-import { motion, useScroll } from "framer-motion";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -78,7 +77,6 @@ export const Home = () => {
     }
   }
 
-  const { scrollYProgress } = useScroll();
 
   const navigate = useNavigate();
 
@@ -114,10 +112,7 @@ export const Home = () => {
         pauseOnHover
         theme="colored"
       />}
-      <motion.div
-        className="progress-bar"
-        style={{ scaleX: scrollYProgress }}
-      />
+
       <Modal
         open={open}
         onClose={handleClose}
@@ -176,7 +171,7 @@ export const Home = () => {
           <div className='font-bold text-blue-50 text-2xl'>LEADERBOARD</div>
         </div>
 
-        <div className="button m-auto flex gap-10 flex-wrap">
+        <div className="button flex gap-10 flex-wrap justify-center items-center">
           <div className="viewldboard">
             <Link to="/leaderboard">
               <button className="w-fit px-6 py-4 bg-slate-500 rounded-xl border-2 border-blue-200 active:bg-slate-400 hover:bg-sky-100 transition-all ease-in-out hover:scale-105">View Leaderboard</button>
@@ -189,14 +184,14 @@ export const Home = () => {
             </Link>
           </div>
         </div>
-        <div className="faucet mb-56">
+        <div className="faucet mb-56 mt-12">
           <p className='text-slate-300 font-semibold'>Mumbai Faucet - <a className='px-1.5 py-1.5 text-black bg-slate-400 rounded-xl border-2 border-blue-200 active:bg-slate-300  hover:bg-sky-100 transition-all ease-in-out hover:scale-105' href="https://mumbaifaucet.com/" target='_blank'>CLICK HERE</a></p>
         </div>
       </div>
 
       <section className='tasksMain -mt-28 flex flex-col justify-center items-center px-6'>
         <p className='font-bold text-blue-100 text-2xl animate-pulse shadow-lg p-4 mb-10'>COMMUNITY TASKS</p>
-        <div className='grid grid-cols-2 min-h-[300px] mx-4 mb-12 w-full'>
+        <div className='grid grid-cols-1 gap-12 md:grid-cols-2 min-h-[1000px] mb-20 md:min-h-[300px] w-full'>
           <div className='flex flex-col bg-sky-800 items-center mx-10 shadow-2xl border-t-2 rounded-xl'>
             <p className='font-bold text-blue-100 text-xl mt-2'>Ongoing Tasks</p>
             <div className="taskList w-full mx-12 flex flex-col items-center justify-center">
