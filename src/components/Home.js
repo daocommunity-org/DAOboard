@@ -268,7 +268,7 @@ export const Home = () => {
         </div>
         <div className='flex flex-col items-center'>
           <p className='font-semibold font-sans text-gray-200 -mb-2'>CONTRACTS SCANNED BY</p>
-          <a href="https://solidityscan.com/" target='_blank'><img className='w-16' src={sscan} alt="sscan" /></a>
+          <a href="https://solidityscan.com/" target='_blank'><img className='w-36' src={sscan} alt="sscan" /></a>
 
         </div>
       </footer>
