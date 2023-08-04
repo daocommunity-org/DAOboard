@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import { CircularProgress } from "@mui/material";
 
 function LeaderBoard() {
   const [open, setOpen] = useState(false);
@@ -32,6 +33,7 @@ function LeaderBoard() {
   };
   const {
     membersdata,
+    taskLoader,
     currentUser,
     providerConnected,
     pointsToToken,
@@ -49,10 +51,6 @@ function LeaderBoard() {
       await pointsToToken(parseInt(withdrawTokens));
     }
   };
-
-  useEffect(() => {
-
-  }, []);
   return (
     <div>
       <Modal
@@ -80,14 +78,14 @@ function LeaderBoard() {
           </div>
         </Box>
       </Modal>
-      <div className="bg-sky-900 h-screen flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center mt-36">
         <div>
-          <h1 className="font-bold text-blue-50 text-2xl mb-4">
+          <h1 className="font-bold text-blue-50 text-l md:text-2xl mb-4">
             LeaderBoard - Top Contributors
           </h1>
         </div>
 
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div class="overflow-x-auto shadow-md sm:rounded-lg mx-4 mt-12">
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
@@ -114,7 +112,9 @@ function LeaderBoard() {
                 </th>
               </tr>
             </thead>
-            <tbody>
+            {taskLoader ? <div className="flex items-center justify-center mt-8">
+              <CircularProgress color="inherit" />
+            </div> : <tbody>
               {membersdata.map((dat) => (
                 <tr class="bg-cyan-600 dark:border-gray-800">
                   <th
@@ -149,7 +149,8 @@ function LeaderBoard() {
                   </td>
                 </tr>
               ))}
-            </tbody>
+            </tbody>}
+
           </table>
         </div>
       </div>

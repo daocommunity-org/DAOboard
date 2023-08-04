@@ -208,9 +208,9 @@ export const Home = () => {
                   </div>
                   <p className='taskDesc font-semibold mx-2'>{dat[2].slice(0, 100) + "...."}</p>
                   <div className="flex justify-between mx-4 items-center">
-                    <button onClick={() => handleOpen(dat[2], parseInt(dat[5]._hex), parseInt(dat[3]._hex), parseInt(dat[0]._hex))} className='w-fit px-2 m-4 bg-blue-200 rounded-xl active:bg-slate-400 border-2 border-blue-200 transition-all ease-in-out hover:scale-105 font-semibold'>Register</button>
+                    <button onClick={() => handleOpen(dat[2], parseInt(dat[5]._hex) + 1, parseInt(dat[3]._hex), parseInt(dat[0]._hex))} className='w-fit px-2 m-4 bg-blue-200 rounded-xl active:bg-slate-400 border-2 border-blue-200 transition-all ease-in-out hover:scale-105 font-semibold'>Register</button>
                     <div>
-                      <GroupIcon /> : {parseInt(dat[5]._hex)}
+                      <GroupIcon /> : {parseInt(dat[5]._hex) + 1}
                     </div>
                   </div>
                 </div>

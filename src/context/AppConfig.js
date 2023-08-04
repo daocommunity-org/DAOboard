@@ -13,7 +13,7 @@ export const AppProvider = ({ children }) => {
   const [enrollData, setenrollData] = useState();
   const [tasks, setTasks] = useState([]);
   const [taskLoader, setTaskLoader] = useState(false);
-  const contractAddress ="0x7C4AA2D25087BE8AA7c7F53cC1600308d436A3E0";
+  const contractAddress = "0x7C4AA2D25087BE8AA7c7F53cC1600308d436A3E0";
   const enrollmentcontractAddress =
     "0xc15a65D129D2a3D4C4Ea10270755F15E6FcF5b42";
   const ABI = contr.abi;
@@ -246,9 +246,9 @@ export const AppProvider = ({ children }) => {
           ABI,
           provider
         );
+        setTaskLoader(true);
         let data = await providerContract.returnData();
         setmembersdata(SortArray(data));
-        setTaskLoader(true);
         let tasks = await providerContract.returnTasks();
         setTasks(tasks);
         setTaskLoader(false);
