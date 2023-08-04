@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import AddPts from './AddPts';
 import AdminNav from './AdminNav'
 import Approve from './Approve';
@@ -7,9 +7,18 @@ import EditRegNo from './EditRegNo';
 import GetMDetails from './GetMDetails';
 import RoleMember from './RoleMember';
 import Terminate from './Terminate.js';
+import { useNavigate } from 'react-router-dom';
+import { AppConfig } from '../context/AppConfig';
 
 function AdminMember() {
     const [statefunction, setStatefunction] = useState("");
+    const { isadmin } = useContext(AppConfig)
+    const navigate = useNavigate()
+    useEffect(() => {
+        if (!isadmin) {
+            navigate("/")
+        }
+    }, [])
     return (
         <div className='bg-sky-900 h-screen flex justify-start gap-10'>
             <AdminNav />

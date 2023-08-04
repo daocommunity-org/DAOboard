@@ -1,12 +1,20 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import AddTask from './AddTask'
 import AdminNav from './AdminNav'
 import TaskStatus from './TaskStatus'
+import { AppConfig } from '../context/AppConfig'
+import { useNavigate } from 'react-router-dom'
 
 function AdminTasks() {
 
     const [statefunctions, setStatefunctions] = useState("")
-
+    const { isadmin } = useContext(AppConfig)
+    const navigate = useNavigate()
+    useEffect(() => {
+        if (!isadmin) {
+            navigate("/")
+        }
+    }, [])
     return (
         <div className='bg-sky-900 h-screen flex justify-start gap-10'>
             <AdminNav />

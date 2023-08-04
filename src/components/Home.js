@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { AppConfig } from '../context/AppConfig'
 import daologo from "../Logo.png";
@@ -24,12 +24,24 @@ export const Home = () => {
   const [fulldesc, setFullDesc] = useState("")
   const [handleVolList, setHandleVolList] = useState(false)
   const [volList, setVolList] = useState([])
+  const [volList1, setVolList1] = useState([])
   const [taskId, setTaskId] = useState("")
   const [limit, setLimit] = useState({ id: "", lim: 32 })
   const [comment, setComment] = useState("")
   const [loader1, setLoader1] = useState(false)
   const [toastEnable, setToastEnable] = useState(false)
-
+  // console.log(currentUser)
+  // console.log(volList1[2][1].toLowerCase())
+  const registerTask = async (taskId, comment) => {
+    const currentUserLowerCase = currentUser.toLowerCase();
+    for (let i = 0; i < volList1.length; i++) {
+      if (currentUserLowerCase === volList1[i][1].toLowerCase()) {
+        alert("User has already registered :(");
+        return false;
+      }
+    }
+    await registerForTask(taskId, comment);
+  };
 
   const connectToWallet = async () => {
     const connection = await connectWallet();
@@ -50,7 +62,10 @@ export const Home = () => {
     theme: "light",
   });
 
-  const handleOpen = (description, members, tokens, taskId) => {
+  const handleOpen = async (description, members, tokens, taskId) => {
+    setLoader1(true)
+    setVolList1(await getVolunteerList(taskId))
+    setLoader1(false)
     setTaskId(taskId)
     setMembers(members)
     setTokens(tokens)
@@ -74,12 +89,12 @@ export const Home = () => {
 
   const openCloseVolList = async (taskId) => {
     setHandleVolList(!handleVolList)
-    if (volList != []) {
-      setLoader1(true)
-      setVolList(await getVolunteerList(taskId))
-      setLoader1(false)
-      console.log(volList)
-    }
+    // if (volList != []) {
+    //   setLoader1(true)
+    //   setVolList(await getVolunteerList(taskId))
+    //   setLoader1(false)
+    //   console.log(volList)
+    // }
   }
 
 
@@ -98,6 +113,9 @@ export const Home = () => {
   const mouseLeaveHandler = (id) => {
     document.getElementById(id).addEventListener('mouseleave', () => setLimit({ id: id, lim: 32 }))
   }
+
+  console.log(tasks)
+
 
 
   // console.log(currentUser) 
@@ -133,12 +151,12 @@ export const Home = () => {
             </div>
             <input onChange={e => setComment(e.target.value)} value={comment} placeholder='Enter Comment' className='rounded-lg p-2' type="text" />
             <div className="flex justify-between">
-              <button onClick={() => registerForTask(taskId, comment)} className='w-fit h-fit p-2 bg-slate-500 rounded-xl  border-2 border-blue-200 active:bg-slate-400 transition-all ease-in-out hover:scale-105 hover:bg-blue-300 cursor-pointer'>Register as Volunteer</button>
+              <button onClick={() => registerTask(taskId, comment)} className='w-fit h-fit p-2 bg-slate-500 rounded-xl  border-2 border-blue-200 active:bg-slate-400 transition-all ease-in-out hover:scale-105 hover:bg-blue-300 cursor-pointer'>Register as Volunteer</button>
               <button onClick={() => openCloseVolList(taskId)} className='flex justify-center items-center cursor-pointer'> <p className='text-xs font-semibold'>View Volunteers</p> {handleVolList === true ? <ArrowDownwardIcon /> : <DoubleArrowIcon />}</button>
             </div>
-            {handleVolList === true && <div className="vollist mt-4 overflow-y-scroll overflow-x-hidden max-h-44 bg-blue-400 p-5 rounded-lg flex flex-col ">
-              {loader1 === false ? volList.map((dat) => (
-                <div className='flex justify-between items-center mt-4 '>
+            {handleVolList === true && <div className="vollist mt-4 overflow-y-scroll overflow-x-hidden max-h-44 bg-blue-400 p-5 rounded-lg flex flex-col  ">
+              {loader1 === false ? volList1.map((dat, index) => (
+                <div key={index} className='flex justify-between items-center mt-4 '>
                   <p>{dat[0]}</p>
                   {currentUser.toLowerCase() === dat[1].toLowerCase() ? <img onClick={() => navigate('/taskstatus/' + dat[1] + '/' + taskId)} className='w-8 animate-spin cursor-pointer transition-all ease-in-out hover:scale-125' src={daologo} /> : ""}
                   <p id={dat[1] + "xyz"} onMouseLeave={() => mouseLeaveHandler(dat[1] + "xyz")} onMouseEnter={() => handleHover(dat[1] + "xyz")} className='bg-slate-300 p-1 rounded-xl cursor-pointer transition-all ease-in-out'>{dat[1].slice(0, limit.id === dat[1] + "xyz" ? limit.lim : 32)}</p>
@@ -209,8 +227,11 @@ export const Home = () => {
                   <p className='taskDesc font-semibold mx-2'>{dat[2].slice(0, 100) + "...."}</p>
                   <div className="flex justify-between mx-4 items-center">
                     <button onClick={() => handleOpen(dat[2], parseInt(dat[5]._hex) + 1, parseInt(dat[3]._hex), parseInt(dat[0]._hex))} className='w-fit px-2 m-4 bg-blue-200 rounded-xl active:bg-slate-400 border-2 border-blue-200 transition-all ease-in-out hover:scale-105 font-semibold'>Register</button>
+                    {loader1 ? <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <CircularProgress size={'18px'} color='inherit' />
+                    </Box> : ""}
                     <div>
-                      <GroupIcon /> : {parseInt(dat[5]._hex) + 1}
+                      <GroupIcon /> : {parseInt(dat[5]._hex)}
                     </div>
                   </div>
                 </div>
