@@ -231,7 +231,7 @@ export const Home = () => {
                       <CircularProgress size={'18px'} color='inherit' />
                     </Box> : ""}
                     <div>
-                      <GroupIcon /> : {parseInt(dat[5]._hex)}
+                      <GroupIcon /> : {parseInt(dat[5]._hex) + 1}
                     </div>
                   </div>
                 </div>
@@ -252,7 +252,7 @@ export const Home = () => {
                   <p className='taskDesc font-semibold mx-2'>{dat[2].slice(0, 100) + "...."}</p>
                   <div className="flex justify-between mx-4 items-center">
                     <div className='mt-6'>
-                      <GroupIcon /> : {parseInt(dat[5]._hex)}
+                      <GroupIcon /> : {parseInt(dat[5]._hex) + 1}
                     </div>
                   </div>
                 </div>
