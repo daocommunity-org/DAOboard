@@ -31,6 +31,7 @@ export const Home = () => {
   const [loader1, setLoader1] = useState(false)
   const [loaderTask, setLoaderTask] = useState("")
   const [toastEnable, setToastEnable] = useState(false)
+  const [volCounts, setVolCounts] = useState([])
   // console.log(currentUser)
   // console.log(volList1[2][1].toLowerCase())
   const registerTask = async (taskId, comment) => {
@@ -71,7 +72,7 @@ export const Home = () => {
     setLoader1(false)
     setLoaderTask("")
     setTaskId(taskId)
-    setMembers(members)
+    // setMembers(volList1.length)
     setTokens(tokens)
     setFullDesc(description)
     setOpen(true);
@@ -121,7 +122,21 @@ export const Home = () => {
   console.log(tasks)
 
 
-
+  useEffect(() => {
+    const fetchVolCount = async () => {
+      const volLength = await Promise.all(tasks.map(async (task) => {
+        const taskId = parseInt(task[0]._hex);
+        const volunteers = await getVolunteerList(taskId);
+        return {
+          taskId: taskId,
+          count: volunteers.length
+        };
+      }));
+      console.log(volLength);
+      setVolCounts(volLength)
+    };
+    fetchVolCount();
+  }, [tasks]);
   // console.log(currentUser) 
 
   return (
@@ -150,7 +165,7 @@ export const Home = () => {
           <div className='flex flex-col  justify-center gap-4'>
             <div className='font-bold'>{fulldesc}</div>
             <div className='flex flex-row justify-between'>
-              <div className="font-semibold">Active Volunteers: {members}</div>
+              <div className="font-semibold">Active Volunteers: {volCounts ? volCounts.find(item => item.taskId === parseInt(taskId))?.count : ""}</div>
               <div className='font-semibold'>Tokens Completion  :🪙{tokens}</div>
             </div>
             <input onChange={e => setComment(e.target.value)} value={comment} placeholder='Enter Comment' className='rounded-lg p-2' type="text" />
@@ -234,7 +249,8 @@ export const Home = () => {
                       <CircularProgress size={'18px'} color='inherit' />
                     </Box> : ""}
                     <div>
-                      <GroupIcon /> : {parseInt(dat[5]._hex)}
+                      <GroupIcon /> : {volCounts ? volCounts.find(item => item.taskId === parseInt(dat[0]._hex))?.count : ""}
+
                     </div>
                   </div>
                 </div>
@@ -246,16 +262,17 @@ export const Home = () => {
           <div className='flex flex-col bg-sky-800 items-center mx-10 shadow-2xl border-t-2 rounded-xl'>
             <p className='font-bold text-blue-100 text-xl mt-2'>Completed Tasks</p>
             <div className="taskList w-full mx-12 flex flex-col items-center justify-center">
-              {taskLoader === false ? tasks.filter((x) => x[4] === false).map((dat) => (
-                <div className="taskItem flex bg-sky-700 flex-col w-4/5 justify-center my-4 shadow-lg border-b-4 border-l-2 border-blue-300 rounded-3xl px-4 py-2 transition-all ease-in-out hover:bg-blue-50 hover:opacity-75">
+              {taskLoader === false ? tasks.filter((x) => x[4] === false).map((dat, index) => (
+                <div key={index} className="taskItem flex bg-sky-700 flex-col w-4/5 justify-center my-4 shadow-lg border-b-4 border-l-2 border-blue-300 rounded-3xl px-4 py-2 transition-all ease-in-out hover:bg-blue-50 hover:opacity-75">
                   <div className='flex my-2 items-center justify-between'>
-                    <p className='taskTitle flex gap-4 font-extrabold  bg-red-400 w-fit rounded-xl p-2'>{dat[1]} <p className='text-red-900'>CLOSED</p> </p>
+                    <div className='taskTitle flex gap-4 font-extrabold  bg-red-400 w-fit rounded-xl p-2'>{dat[1]} <p className='text-red-900'>CLOSED</p> </div>
                     <p className='font-semibold mx-2'>🪙: {parseInt(dat[3]._hex)}</p>
                   </div>
                   <p className='taskDesc font-semibold mx-2'>{dat[2].slice(0, 100) + "...."}</p>
                   <div className="flex justify-between mx-4 items-center">
                     <div className='mt-6'>
-                      <GroupIcon /> : {parseInt(dat[5]._hex)}
+                      <GroupIcon /> : {volCounts ? volCounts.find(item => item.taskId === parseInt(dat[0]._hex))?.count : ""}
+
                     </div>
                   </div>
                 </div>
