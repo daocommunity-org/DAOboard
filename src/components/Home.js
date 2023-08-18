@@ -29,6 +29,7 @@ export const Home = () => {
   const [limit, setLimit] = useState({ id: "", lim: 32 })
   const [comment, setComment] = useState("")
   const [loader1, setLoader1] = useState(false)
+  const [loaderTask, setLoaderTask] = useState("")
   const [toastEnable, setToastEnable] = useState(false)
   // console.log(currentUser)
   // console.log(volList1[2][1].toLowerCase())
@@ -63,9 +64,12 @@ export const Home = () => {
   });
 
   const handleOpen = async (description, members, tokens, taskId) => {
+    setLoaderTask(taskId)
     setLoader1(true)
     setVolList1(await getVolunteerList(taskId))
+    console.log(volList1)
     setLoader1(false)
+    setLoaderTask("")
     setTaskId(taskId)
     setMembers(members)
     setTokens(tokens)
@@ -186,8 +190,6 @@ export const Home = () => {
         </div>
       </div>
 
-      {/* <button onClick={e => addMember("Gautham", "21BRS1032")}>Add</button> */}
-      {/* hero */}
       <div className='hero h-screen flex flex-col items-center'>
         <div className="logo mt-6 m-auto flex items-center gap-4 border-2 border-white p-4 rounded-lg flex-wrap mx-2" >
           <img className='w-96' src={daologo1} alt="" />
@@ -207,8 +209,9 @@ export const Home = () => {
             </Link>
           </div>
         </div>
-        <div className="faucet mb-56 mt-12">
+        <div className="faucet mb-56 mt-12 flex justify-center flex-col items-center">
           <p className='text-slate-300 font-semibold'>Mumbai Faucet - <a className='px-1.5 py-1.5 text-black bg-slate-400 rounded-xl border-2 border-blue-200 active:bg-slate-300  hover:bg-sky-100 transition-all ease-in-out hover:scale-105' href="https://mumbaifaucet.com/" target='_blank'>CLICK HERE</a></p>
+          <p className='text-slate-300 text-xs mt-2  font-light'>(Please make sure that you are on Polygon Mumbai Testnet)</p>
         </div>
       </div>
 
@@ -218,8 +221,8 @@ export const Home = () => {
           <div className='flex flex-col bg-sky-800 items-center mx-10 shadow-2xl border-t-2 rounded-xl'>
             <p className='font-bold text-blue-100 text-xl mt-2'>Ongoing Tasks</p>
             <div className="taskList w-full mx-12 flex flex-col items-center justify-center">
-              {taskLoader === false ? tasks.filter((x) => x[4] === true).map((dat) => (
-                <div className="taskItem flex bg-sky-700 flex-col w-4/5 justify-center my-4 shadow-lg border-b-4 border-l-2 border-blue-300 rounded-3xl px-4 py-2 transition-all ease-in-out hover:bg-blue-50 hover:opacity-75">
+              {taskLoader === false ? tasks.filter((x) => x[4] === true).map((dat, index) => (
+                <div key={index} className="taskItem flex bg-sky-700 flex-col w-4/5 justify-center my-4 shadow-lg border-b-4 border-l-2 border-blue-300 rounded-3xl px-4 py-2 transition-all ease-in-out hover:bg-blue-50 hover:opacity-75">
                   <div className='flex my-2 items-center justify-between'>
                     <p className='taskTitle font-extrabold  bg-sky-100 w-fit rounded-xl p-2'>{dat[1]}</p>
                     <p className='font-semibold mx-2'>🪙: {parseInt(dat[3]._hex)}</p>
@@ -227,11 +230,11 @@ export const Home = () => {
                   <p className='taskDesc font-semibold mx-2'>{dat[2].slice(0, 100) + "...."}</p>
                   <div className="flex justify-between mx-4 items-center">
                     <button onClick={() => handleOpen(dat[2], parseInt(dat[5]._hex) + 1, parseInt(dat[3]._hex), parseInt(dat[0]._hex))} className='w-fit px-2 m-4 bg-blue-200 rounded-xl active:bg-slate-400 border-2 border-blue-200 transition-all ease-in-out hover:scale-105 font-semibold'>Register</button>
-                    {loader1 ? <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    {loader1 && parseInt(loaderTask) === parseInt(dat[0]._hex) ? <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       <CircularProgress size={'18px'} color='inherit' />
                     </Box> : ""}
                     <div>
-                      <GroupIcon /> : {parseInt(dat[5]._hex) + 1}
+                      <GroupIcon /> : {parseInt(dat[5]._hex)}
                     </div>
                   </div>
                 </div>
@@ -252,7 +255,7 @@ export const Home = () => {
                   <p className='taskDesc font-semibold mx-2'>{dat[2].slice(0, 100) + "...."}</p>
                   <div className="flex justify-between mx-4 items-center">
                     <div className='mt-6'>
-                      <GroupIcon /> : {parseInt(dat[5]._hex) + 1}
+                      <GroupIcon /> : {parseInt(dat[5]._hex)}
                     </div>
                   </div>
                 </div>

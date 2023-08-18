@@ -184,11 +184,9 @@ export const AppProvider = ({ children }) => {
     for (let i = 0; i < membersdata.length; i++) {
       let temp = membersdata[i];
       let address = temp.walletAddress;
-      console.log(address);
-      let id = await newsignedContract.taskRegistrations(address);
-      if (parseInt(id._hex) === taskId) {
-        console.log("first");
-        let isDone = await returnTaskDone(parseInt(id._hex), address);
+      let stat = await newsignedContract.taskEligible(taskId, address);
+      if (stat) {
+        let isDone = await returnTaskDone(taskId, address);
         volList[k] = [temp.name, temp.walletAddress, isDone];
         k++;
       }
