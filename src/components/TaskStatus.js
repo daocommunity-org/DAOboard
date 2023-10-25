@@ -42,7 +42,7 @@ function TaskStatus() {
     // }, [])
 
     return (
-        <div className='flex flex-col gap-6 justify-center items-center w-11/12 rounded-2xl'>
+        <div className='flex flex-col gap-6 justify-center items-center w-11/12 h-full rounded-2xl'>
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -75,7 +75,7 @@ function TaskStatus() {
                 <p className='font-bold text-white text-opacity-60'>Task</p>
                 <p className='font-bold text-white text-opacity-60 mr-4'>Status</p>
             </div>
-            <div className='taskstatus flex items-center flex-col gap-6 w-full overflow-y-scroll py-2 shadow-2xl rounded-3xl px-4 border-b-2 h-[450px]'>
+            <div className='taskstatus flex items-center flex-col gap-6 w-full overflow-y-scroll py-2 shadow-2xl rounded-3xl px-4 border-b-2 h-3/4 mb-12'>
                 {taskLoader ? <Box sx={{ marginTop: '33px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <CircularProgress color='inherit' />
                 </Box> : tasks.map((dat) => (
