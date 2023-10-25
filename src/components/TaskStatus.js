@@ -75,7 +75,7 @@ function TaskStatus() {
                 <p className='font-bold text-white text-opacity-60'>Task</p>
                 <p className='font-bold text-white text-opacity-60 mr-4'>Status</p>
             </div>
-            <div className='taskstatus flex items-center flex-col gap-6 w-full overflow-y-scroll py-2 shadow-2xl rounded-3xl px-4 border-b-2'>
+            <div className='taskstatus flex items-center flex-col gap-6 w-full overflow-y-scroll py-2 shadow-2xl rounded-3xl px-4 border-b-2 h-[450px]'>
                 {taskLoader ? <Box sx={{ marginTop: '33px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <CircularProgress color='inherit' />
                 </Box> : tasks.map((dat) => (

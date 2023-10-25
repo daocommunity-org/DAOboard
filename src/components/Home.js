@@ -165,7 +165,7 @@ export const Home = () => {
           <div className='flex flex-col  justify-center gap-4'>
             <div className='font-bold'>{fulldesc}</div>
             <div className='flex flex-row justify-between'>
-              <div className="font-semibold">Active Volunteers: {volCounts ? volCounts.find(item => item.taskId === parseInt(taskId))?.count : ""}</div>
+              <div className="font-semibold">Active Volunteers: {volCounts ? volCounts.find(item => item.taskId === parseInt(taskId))?.count : ".."}</div>
               <div className='font-semibold'>Tokens Completion  :🪙{tokens}</div>
             </div>
             <input onChange={e => setComment(e.target.value)} value={comment} placeholder='Enter Comment' className='rounded-lg p-2' type="text" />
@@ -249,7 +249,7 @@ export const Home = () => {
                       <CircularProgress size={'18px'} color='inherit' />
                     </Box> : ""}
                     <div>
-                      <GroupIcon /> : {volCounts ? volCounts.find(item => item.taskId === parseInt(dat[0]._hex))?.count : ""}
+                      <GroupIcon /> : {volCounts ? volCounts.find(item => item.taskId === parseInt(dat[0]._hex))?.count : "..."}
 
                     </div>
                   </div>
@@ -271,7 +271,7 @@ export const Home = () => {
                   <p className='taskDesc font-semibold mx-2'>{dat[2].slice(0, 100) + "...."}</p>
                   <div className="flex justify-between mx-4 items-center">
                     <div className='mt-6'>
-                      <GroupIcon /> : {volCounts ? volCounts.find(item => item.taskId === parseInt(dat[0]._hex))?.count : ""}
+                      <GroupIcon /> : {volCounts ? volCounts.find(item => item.taskId === parseInt(dat[0]._hex))?.count : "..."}
 
                     </div>
                   </div>
