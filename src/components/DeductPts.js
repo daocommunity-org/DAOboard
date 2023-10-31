@@ -8,7 +8,7 @@ function DeductPts() {
     const [points, setPoints] = useState("");
     const deductpts = () => {
         for (let i = 0; i < membersdata.length; i++) {
-            if (membersdata[i][5] === wallet) {
+            if (membersdata[i][6] === wallet) {
                 minusPoints(wallet, points);
             }
         }
